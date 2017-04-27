@@ -1,4 +1,4 @@
-package splayer;
+package sPlayer;
 
 import org.bukkit.entity.Player;
 

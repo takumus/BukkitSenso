@@ -1,7 +1,7 @@
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import splayer.SPlayerManager;
+import sPlayer.SPlayerManager;
 
 public class Main extends JavaPlugin {
     @Override
