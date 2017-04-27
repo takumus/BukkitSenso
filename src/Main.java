@@ -6,7 +6,6 @@ import splayer.SPlayerManager;
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
-        System.out.println("hello 111111");
         SPlayerManager.init(this);
     }
     @Override
