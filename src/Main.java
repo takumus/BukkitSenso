@@ -1,11 +1,13 @@
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import splayer.SPlayerManager;
 
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
-        System.out.println("hello");
+        System.out.println("hello 111111");
+        SPlayerManager.init(this);
     }
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){
