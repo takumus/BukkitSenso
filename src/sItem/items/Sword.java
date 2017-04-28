@@ -11,10 +11,10 @@ import sPlayer.SPlayer;
  */
 public class Sword extends SItem{
     public Sword() {
-        super();
+        super("強い剣");
     }
     @EventHandler
     private void onClick(PlayerInteractEvent e) {
-        this.holder.getPlayer().setVelocity(new Vector(0, 10, 0));
+        if (this.getEnabled()) this.getHolder().getPlayer().setVelocity(new Vector(0, 10, 0));
     }
 }

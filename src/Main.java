@@ -19,7 +19,11 @@ public class Main extends JavaPlugin {
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){
         if (sender instanceof Player) {
             SPlayer sp = SPlayerManager.getSPlayer((Player) sender);
-            sp.clearSItems();
+            if (args[0].equalsIgnoreCase("begin")) {
+                sp.setSItemsEnabled(true);
+            }else if(args[0].equalsIgnoreCase("end")) {
+                sp.setSItemsEnabled(false);
+            }
         }
         return true;
     }

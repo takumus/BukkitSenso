@@ -15,7 +15,7 @@ public class SPlayer {
     public SPlayer(Player player) {
         this.player = player;
         this.sItems = new ArrayList<>();
-        this.addSItem(new Sword(), 0);
+        this.addSItem(new Sword());
     }
     public Player getPlayer() {
         return this.player;
@@ -23,12 +23,22 @@ public class SPlayer {
     public String getName() {
         return this.player.getDisplayName();
     }
+    public void addSItem(SItem sItem) {
+        this.addSItem(sItem, this.sItems.size());
+    }
     public void addSItem(SItem sItem, int id) {
         this.sItems.add(sItem);
-        sItem.init(this, id);
+        sItem.initHolder(this, id);
     }
     public void clearSItems() {
         this.sItems.forEach((sItem) -> sItem.destroy());
         this.sItems.clear();
+        this.player.getInventory().clear();
+    }
+    public ArrayList<SItem> getSItems() {
+        return this.sItems;
+    }
+    public void setSItemsEnabled(boolean value) {
+        this.sItems.forEach((sItem) -> sItem.setEnabled(value));
     }
 }
