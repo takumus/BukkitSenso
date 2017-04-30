@@ -43,6 +43,7 @@ public class SPlayerManager implements Listener{
         Bukkit.getServer().broadcastMessage(player.getName() + "が入室した");
         SPlayer splayer = new SPlayer(player);
         this.sPlayers.put(player, splayer);
+        splayer.sendTitle("ようこそ", "ようこそ", 60);
     }
     public void removeSPlayer(Player player) {
         this.sPlayers.remove(player);

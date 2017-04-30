@@ -8,7 +8,7 @@ import sPlayer.SPlayer;
 /**
  * Created by takumus on 2017/04/28.
  */
-public class SItem implements Listener{
+abstract public class SItem implements Listener{
     private SPlayer holder;
     private int index;
     private boolean enabled;
@@ -21,9 +21,7 @@ public class SItem implements Listener{
         this.index = index;
         SItemManager.addSItem(this);
     }
-    public void initItem() {
-        this.setItem(new ItemStack(Material.DIAMOND_SWORD));
-    }
+    abstract public void initItem();
     public void destroy() {
         SItemManager.removeItem(this);
     }
