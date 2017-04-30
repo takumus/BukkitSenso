@@ -1,22 +1,17 @@
 package sItem.items;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

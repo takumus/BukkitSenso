@@ -1,7 +1,5 @@
 package stages;
 
-import org.bukkit.Location;
-
 import java.util.ArrayList;
 import java.util.List;
 

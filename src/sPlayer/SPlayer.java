@@ -9,8 +9,6 @@ import sItem.items.Sword;
 import utils.ColorMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by takumus on 2017/04/26.

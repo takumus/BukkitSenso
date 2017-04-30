@@ -1,6 +1,5 @@
 package sItem;
 
-import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import sPlayer.SPlayer;
