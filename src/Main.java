@@ -7,25 +7,20 @@ import sItem.SItem;
 import sItem.SItemManager;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import scenes.Deathmatch;
 import scenes.GameBase;
+import stages.StageManager;
 import utils.MetadataManager;
 
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
+        StageManager.init(this);
         MetadataManager.init(this);
         SItemManager.init(this);
         SPlayerManager.init(this);
-        Bukkit.getServer().getPluginManager().registerEvents(new GameBase(this) {
-            @Override
-            public void onSPlayerDeath(SPlayer sPlayer, SItem weapon) {
-                if(weapon != null) {
-                    Bukkit.getServer().broadcastMessage(weapon.getHolder().getName() + " -> " + sPlayer.getName() + "(" + weapon.getName() + ")");
-                }else {
-                    Bukkit.getServer().broadcastMessage("? ->" + sPlayer.getName());
-                }
-            }
-        }, this);
+        Bukkit.getServer().getPluginManager().registerEvents(new Deathmatch(this), this);
+
     }
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){

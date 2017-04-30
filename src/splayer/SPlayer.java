@@ -1,9 +1,12 @@
 package sPlayer;
 
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
 import sItem.SItem;
 import sItem.items.SuperBow;
 import sItem.items.Sword;
+import utils.ColorMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ public class SPlayer {
     private SItem lastDamagesWeapon;
     private SPlayerStatus status;
     private SPlayerMeta metadata;
+    private DyeColor dyeColor;
     public SPlayer(Player player) {
         this.player = player;
         this.sItems = new ArrayList<>();
@@ -25,12 +29,16 @@ public class SPlayer {
         this.addSItem(new SuperBow());
         this.player.setHealth(20D);
         this.metadata = new SPlayerMeta();
+        dyeColor = DyeColor.GREEN;
     }
     public Player getPlayer() {
         return this.player;
     }
     public String getName() {
         return this.player.getDisplayName();
+    }
+    public String getNameWithColor() {
+        return ChatColor.RESET.toString() + ChatColor.BOLD.toString() + this.getChatColor().toString() + this.player.getDisplayName() + ChatColor.RESET.toString();
     }
     public void addSItem(SItem sItem) {
         this.addSItem(sItem, this.sItems.size());
@@ -83,5 +91,15 @@ public class SPlayer {
 
     public SPlayerMeta getMeta() {
         return this.metadata;
+    }
+
+    public DyeColor getDyeColor() {
+        return this.dyeColor;
+    }
+    public ChatColor getChatColor() {
+        return ColorMap.getChatColor(this.dyeColor);
+    }
+    public void setDyeColor(DyeColor color) {
+        this.dyeColor = color;
     }
 }

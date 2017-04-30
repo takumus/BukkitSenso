@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import stages.Stage;
 
 /**
  * Created by takumus on 2017/04/30.
@@ -18,9 +19,11 @@ import sPlayer.SPlayerManager;
 abstract public class GameBase implements Listener{
     public GameBase(JavaPlugin plugin) {
         Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin,  () -> {
-            // System.out.println("hi");
-        }, 0L, 20L);
+            this.onTick();
+        }, 0L, 1L);
     }
+    abstract  public boolean start(Stage stage);
+    abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     @EventHandler(priority = EventPriority.HIGH)
     public void preventDeath(EntityDamageEvent event) {
@@ -36,5 +39,9 @@ abstract public class GameBase implements Listener{
     @EventHandler(priority = EventPriority.LOW)
     public void preventDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
+    }
+
+    public void message(String message) {
+        Bukkit.getServer().broadcastMessage(message);
     }
 }
