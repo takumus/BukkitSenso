@@ -44,7 +44,7 @@ public class SuperBow extends SItem{
         this.getHolder().getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
     }
     @EventHandler (priority = EventPriority.LOWEST)
-    private void onShoot(EntityShootBowEvent e) {
+    public void onShoot(EntityShootBowEvent e) {
         if (!this.getEnabled()) return;
 
         Player me = this.getHolder().getPlayer();
@@ -68,7 +68,7 @@ public class SuperBow extends SItem{
         this.getHolder().playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
-    private void onDamage(EntityDamageByEntityEvent e) {
+    public void onDamage(EntityDamageByEntityEvent e) {
         if (!this.getEnabled()) return;
 
         Entity damager = e.getDamager();
@@ -87,7 +87,7 @@ public class SuperBow extends SItem{
         }, 2L);
     }
     @EventHandler (priority = EventPriority.LOWEST)
-    private void projectileHit(ProjectileHitEvent e) {
+    public void onProjectileHit(ProjectileHitEvent e) {
         if (!this.getEnabled()) return;
 
         Entity entity = e.getEntity();

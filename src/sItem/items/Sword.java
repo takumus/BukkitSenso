@@ -34,7 +34,7 @@ public class Sword extends SItem{
         this.setItem(this.sword);
     }
     @EventHandler (priority = EventPriority.LOWEST)
-    private void onClick(EntityDamageByEntityEvent e) {
+    public void onDamage(EntityDamageByEntityEvent e) {
         if (!this.getEnabled()) return;
 
         Player me = this.getHolder().getPlayer();

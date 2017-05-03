@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +19,7 @@ import stages.Stage;
  */
 abstract public class GameBase implements Listener{
     public GameBase(JavaPlugin plugin) {
+        System.out.println(111);
         Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin,  () -> {
             this.onTick();
         }, 0L, 1L);
@@ -26,7 +28,7 @@ abstract public class GameBase implements Listener{
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void preventDeath(EntityDamageEvent event) {
+    public void preventDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;
         SPlayer victim = SPlayerManager.getSPlayer((Player) event.getEntity());
@@ -39,12 +41,14 @@ abstract public class GameBase implements Listener{
         ((Player) event.getEntity()).setMaximumNoDamageTicks(0);
     }
     @EventHandler(priority = EventPriority.LOW)
-    private void preventDropItem(PlayerDropItemEvent event) {
+    public void preventDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void 
+    public void preventBlockBreak(BlockBreakEvent event) {
+        event.setCancelled(true);
+    }
 
     public void message(String message) {
         Bukkit.getServer().broadcastMessage(message);
