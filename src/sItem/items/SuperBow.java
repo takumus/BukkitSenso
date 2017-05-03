@@ -50,11 +50,8 @@ public class SuperBow extends SItem{
         Player me = this.getHolder().getPlayer();
         if (!e.getEntity().equals(me)) return;
 
-        ItemStack hand = me.getInventory().getItemInMainHand();
-        if (hand.getType().equals(Material.AIR)) return;
-
-        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(hand);
-        if (!s.getTag().getBoolean("super_bow")) return;
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(me.getInventory().getItemInMainHand());
+        if (s.getTag() == null || !s.getTag().getBoolean("super_bow")) return;
 
         e.setCancelled(true);
 

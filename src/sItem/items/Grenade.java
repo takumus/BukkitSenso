@@ -1,7 +1,6 @@
 package sItem.items;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
@@ -9,22 +8,18 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.util.Vector;
 import sItem.SItem;
 import sItem.SItemManager;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 import utils.MetadataManager;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -52,19 +47,16 @@ public class Grenade extends SItem{
         if (!this.getEnabled()) return;
         if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
 
-        Player me = this.getHolder().getPlayer();
-        if (!e.getPlayer().equals(me)) return;
+        SPlayer me = this.getHolder();
+        if (!e.getPlayer().equals(this.getHolder().getPlayer())) return;
 
-        ItemStack hand = me.getInventory().getItemInMainHand();
-        if (hand.getType().equals(Material.AIR)) return;
-
-        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(hand);
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(me.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("snowball_grenade")) return;
 
         e.setCancelled(true);
-        SPlayer sp = SPlayerManager.getSPlayer(me);
+        SPlayer sp = SPlayerManager.getSPlayer(me.getPlayer());
 
-        Snowball ball = me.launchProjectile(Snowball.class);
+        Snowball ball = me.getPlayer().launchProjectile(Snowball.class);
         MetadataManager.setMetadata(ball, "snowball_grenade", "true");
     }
     @EventHandler (priority = EventPriority.LOWEST)
@@ -78,7 +70,6 @@ public class Grenade extends SItem{
         if (!(entity instanceof Player)) return;
 
         SPlayer shooter = SPlayerManager.getSPlayer(UUID.fromString(MetadataManager.getMetadata(damager, "snowball_holder_uuid")));
-
         if(!shooter.equals(this.getHolder())) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
@@ -99,8 +90,6 @@ public class Grenade extends SItem{
 
         if(!entity.getShooter().equals(this.getHolder().getPlayer())) return;
 
-        Location loc = entity.getLocation();
-
         entity.remove();
 
         TNTPrimed ball = entity.getWorld().spawn(entity.getLocation(), TNTPrimed.class);
@@ -116,7 +105,6 @@ public class Grenade extends SItem{
         if (!MetadataManager.getMetadata(tnt, "snowball_explode").equalsIgnoreCase("true")) return;
 
         SPlayer shooter = SPlayerManager.getSPlayer(UUID.fromString(MetadataManager.getMetadata(tnt, "snowball_holder_uuid")));
-
         if(!shooter.equals(this.getHolder())) return;
 
         e.blockList().clear();

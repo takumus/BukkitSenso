@@ -13,9 +13,6 @@ import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by takumus on 2017/04/28.
  */
@@ -46,10 +43,7 @@ public class Sword extends SItem{
         Entity entity = e.getEntity();
         if (!(entity instanceof Player)) return;
 
-        ItemStack hand = me.getInventory().getItemInMainHand();
-        if (hand.getType().equals(Material.AIR)) return;
-
-        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(hand);
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(me.getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("master_sword")) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
