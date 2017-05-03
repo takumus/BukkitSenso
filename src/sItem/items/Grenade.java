@@ -53,11 +53,12 @@ public class Grenade extends SItem{
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(me.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("snowball_grenade")) return;
 
-        e.setCancelled(true);
         SPlayer sp = SPlayerManager.getSPlayer(me.getPlayer());
 
         Snowball ball = me.getPlayer().launchProjectile(Snowball.class);
         MetadataManager.setMetadata(ball, "snowball_grenade", "true");
+
+        e.setCancelled(true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
@@ -73,13 +74,14 @@ public class Grenade extends SItem{
         if(!shooter.equals(this.getHolder())) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
-        e.setCancelled(true);
 
         victim.damage(this, e.getDamage() * 2);
 
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
             this.getHolder().playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
         }, 2L);
+
+        e.setCancelled(true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onProjectileHit(ProjectileHitEvent e) {

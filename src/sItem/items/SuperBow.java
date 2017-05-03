@@ -53,8 +53,6 @@ public class SuperBow extends SItem{
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(me.getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("super_bow")) return;
 
-        e.setCancelled(true);
-
         Arrow newArrow = me.launchProjectile(Arrow.class);
         MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
         Vector v = e.getProjectile().getVelocity().clone().normalize();
@@ -63,6 +61,8 @@ public class SuperBow extends SItem{
 
         //this.getHolder().playSound(Sound.ENTITY_ARROW_SHOOT);
         this.getHolder().playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
+
+        e.setCancelled(true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
@@ -77,11 +77,12 @@ public class SuperBow extends SItem{
         if (!(entity instanceof Player)) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
-        e.setCancelled(true);
         victim.damage(this, 10D);
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
             this.getHolder().playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
         }, 2L);
+
+        e.setCancelled(true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onProjectileHit(ProjectileHitEvent e) {

@@ -47,7 +47,8 @@ public class Sword extends SItem{
         if (s.getTag() == null || !s.getTag().getBoolean("master_sword")) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
-        e.setCancelled(true);
         victim.damage(this, Sword.DAMAGE);
+
+        e.setCancelled(true);
     }
 }
