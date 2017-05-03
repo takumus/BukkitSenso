@@ -68,7 +68,7 @@ public class Deathmatch extends GameBase {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;
         SPlayer victim = SPlayerManager.getSPlayer((Player) event.getEntity());
-        Effects.blood(victim.getPlayer().getLocation());
+        Effects.blood(victim.getPlayer().getLocation().add(0, 1, 0), 100);
     }
 
 }
