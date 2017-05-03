@@ -2,7 +2,10 @@ package sPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import sItem.SItem;
 import sItem.items.SuperBow;
 import sItem.items.Sword;
@@ -99,5 +102,25 @@ public class SPlayer {
     }
     public void setDyeColor(DyeColor color) {
         this.dyeColor = color;
+    }
+    public void playSound(Sound sound, float volume, float pitch, boolean world) {
+        Player p = this.getPlayer();
+        if (world) {
+            p.getWorld().playSound(p.getLocation(), sound, volume, pitch);
+        }else {
+            p.playSound(p.getLocation(), sound, volume, pitch);
+        }
+    }
+
+    public void addPotion(PotionEffect effect) {
+        this.getPlayer().addPotionEffect(effect);
+    }
+    public void removePotion(PotionEffectType effectType) {
+        this.getPlayer().removePotionEffect(effectType);
+    }
+    public void removeAllPotion() {
+        this.getPlayer().getActivePotionEffects().forEach((effect) -> {
+            this.removePotion(effect.getType());
+        });
     }
 }

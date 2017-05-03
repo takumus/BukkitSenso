@@ -1,18 +1,23 @@
 package sItem.items;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import sItem.SItem;
+import sItem.SItemManager;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 import utils.MetadataManager;
@@ -24,7 +29,7 @@ public class SuperBow extends SItem{
     private ItemStack bow;
     private static double DAMAGE = 100D;
     public SuperBow() {
-        super("スーパー弓");
+        super("Super Bow");
         this.bow = new ItemStack(Material.BOW);
         ItemMeta meta =  this.bow.getItemMeta();
         meta.setDisplayName(this.getName());
@@ -55,16 +60,21 @@ public class SuperBow extends SItem{
 
         Arrow newArrow = me.launchProjectile(Arrow.class);
         MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
-        Vector v = e.getProjectile().getVelocity();
-        v.multiply(1000);
+        Vector v = e.getProjectile().getVelocity().clone().normalize();
+        v.multiply(100);
         newArrow.setVelocity(v);
+
+        //this.getHolder().playSound(Sound.ENTITY_ARROW_SHOOT);
+        this.getHolder().playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
-    private void onClick(EntityDamageByEntityEvent e) {
+    private void onDamage(EntityDamageByEntityEvent e) {
         if (!this.getEnabled()) return;
 
         Entity damager = e.getDamager();
         if (!MetadataManager.getMetadata(damager, "super_bow_arrow").equalsIgnoreCase("true")) return;
+
+        if(!((Projectile)damager).getShooter().equals(this.getHolder().getPlayer())) return;
 
         Entity entity = e.getEntity();
         if (!(entity instanceof Player)) return;
@@ -72,5 +82,17 @@ public class SuperBow extends SItem{
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
         e.setCancelled(true);
         victim.damage(this, 10D);
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
+            this.getHolder().playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
+        }, 2L);
+    }
+    @EventHandler (priority = EventPriority.LOWEST)
+    private void projectileHit(ProjectileHitEvent e) {
+        if (!this.getEnabled()) return;
+
+        Entity entity = e.getEntity();
+        if (!MetadataManager.getMetadata(entity, "super_bow_arrow").equalsIgnoreCase("true")) return;
+
+        entity.remove();
     }
 }

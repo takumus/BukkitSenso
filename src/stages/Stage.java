@@ -9,9 +9,11 @@ import java.util.List;
 public class Stage {
     private List<Spawn> spawns;
     private String name;
-    public Stage(String name) {
+    private String type;
+    public Stage(String name, String type) {
         this.spawns = new ArrayList<>();
         this.name = name;
+        this.type = type.toLowerCase();
     }
     public void addSpawn(Spawn spawn) {
         this.spawns.add(spawn);
@@ -21,5 +23,8 @@ public class Stage {
     }
     public String getName() {
         return this.name;
+    }
+    public String getType() {
+        return this.type;
     }
 }

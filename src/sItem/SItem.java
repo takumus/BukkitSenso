@@ -2,6 +2,7 @@ package sItem;
 
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import sPlayer.SPlayer;
 
 /**
@@ -12,6 +13,7 @@ abstract public class SItem implements Listener{
     private int index;
     private boolean enabled;
     private String name;
+    private JavaPlugin plugin;
     public SItem(String name) {
         this.name = name;
     }

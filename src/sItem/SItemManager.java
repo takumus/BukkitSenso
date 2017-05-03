@@ -20,4 +20,7 @@ public class SItemManager {
     public static void removeItem(SItem item) {
         HandlerList.unregisterAll(item);
     }
+    public static JavaPlugin getPlugin() {
+        return plugin;
+    }
 }

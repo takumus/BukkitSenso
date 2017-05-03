@@ -25,7 +25,7 @@ abstract public class GameBase implements Listener{
     abstract  public boolean start(Stage stage);
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void preventDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;

@@ -22,7 +22,7 @@ public class Sword extends SItem{
     private ItemStack sword;
     private static double DAMAGE = 100D;
     public Sword() {
-        super("マスターソード...!");
+        super("Master Sword...!");
         this.sword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta =  this.sword.getItemMeta();
         meta.setDisplayName(this.getName());
