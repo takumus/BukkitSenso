@@ -2,14 +2,18 @@ package sPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import sItem.SItem;
 import sItem.items.SuperBow;
 import sItem.items.Sword;
 import utils.ColorMap;
+import utils.Utils;
 
 import java.util.ArrayList;
 
@@ -52,6 +56,9 @@ public class SPlayer {
         this.sItems.forEach((sItem) -> sItem.destroy());
         this.sItems.clear();
         this.player.getInventory().clear();
+    }
+    public void clearInventory() {
+        this.getPlayer().getInventory().clear();
     }
     public ArrayList<SItem> getSItems() {
         return this.sItems;
@@ -122,5 +129,11 @@ public class SPlayer {
         this.getPlayer().getActivePotionEffects().forEach((effect) -> {
             this.removePotion(effect.getType());
         });
+    }
+    public void lookAt(Location target) {
+        Utils.lookAt(this.getPlayer(), target);
+    }
+    public void lookAt(Entity target) {
+        Utils.lookAt(this.getPlayer(), target.getLocation());
     }
 }
