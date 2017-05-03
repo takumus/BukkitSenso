@@ -57,9 +57,13 @@ public class Deathmatch extends GameBase {
                 int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
                 SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
                 sp.lookAt(killer.getPlayer());
+                Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
+                if (count < 40) {
+                    if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
+                }
                 if (count < 30) {
                     double vy = (Math.cos(count / 30D * Math.PI * 2 + Math.PI) + 1) / 2;
-                    sp.getPlayer().teleport(meta.getLocation(MetaKey.KILLED_LOCATION).add(0, vy, 0));
+                    sp.getPlayer().teleport(killedPosForCamera.add(0, vy, 0));
                 }else if (count < 120){
                     double r = (count - 30) / 50D * Math.PI * 2;
                     r = r > Math.PI * 2 ? Math.PI * 2 : r;
@@ -67,10 +71,12 @@ public class Deathmatch extends GameBase {
                     Vector dir = sp.getPlayer().getLocation().getDirection();
                     dir.multiply(v * 1.5 + (0.1 * r));
                     double distance = sp.getPlayer().getLocation().distance(killer.getPlayer().getLocation());
-                    if (distance > 5) sp.getPlayer().teleport(meta.getLocation(MetaKey.KILLED_LOCATION).add(dir));
+                    if (distance > 5) sp.getPlayer().teleport(killedPosForCamera.add(dir));
                 }else {
                     this.spawn(sp);
+                    return;
                 }
+                Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
                 sp.lookAt(killer.getPlayer());
 
                 meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
@@ -100,12 +106,14 @@ public class Deathmatch extends GameBase {
                     0, 20
             );
         }
+
         victim.clearInventory();
 
         victim.getMeta().set(MetaKey.STATUS, Status.KILL_CAMERA);
         victim.getMeta().set(MetaKey.KILL_CAMERA_COUNT, 0);
         victim.getMeta().set(MetaKey.NO_DAMAGE, true);
         victim.getMeta().set(MetaKey.KILLED_LOCATION, victim.getPlayer().getLocation().clone());
+        victim.getMeta().set(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA, victim.getPlayer().getLocation().clone());
         victim.getMeta().set(MetaKey.KILLER, weapon.getHolder());
 
         victim.getPlayer().setHealth(20D);
@@ -130,6 +138,7 @@ class MetaKey {
     public static String STATUS = "status";
     public static String KILL_CAMERA_COUNT = "kill_camera_count";
     public static String KILLED_LOCATION = "killed_location";
+    public static String KILLED_LOCATION_FOR_KILL_CAMERA = "killed_location_for_kill_camera";
     public static String KILLER = "killer";
 }
 class Status {

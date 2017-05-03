@@ -26,7 +26,7 @@ abstract public class GameBase implements Listener{
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventDeath(EntityDamageEvent event) {
+    private void preventDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;
         SPlayer victim = SPlayerManager.getSPlayer((Player) event.getEntity());
@@ -35,11 +35,16 @@ abstract public class GameBase implements Listener{
             victim.getPlayer().setHealth(0.5);
             this.onSPlayerDeath(victim, victim.getLastDamagesWeapon());
         }
+        ((Player) event.getEntity()).setNoDamageTicks(0);
+        ((Player) event.getEntity()).setMaximumNoDamageTicks(0);
     }
     @EventHandler(priority = EventPriority.LOW)
-    public void preventDropItem(PlayerDropItemEvent event) {
+    private void preventDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void 
 
     public void message(String message) {
         Bukkit.getServer().broadcastMessage(message);

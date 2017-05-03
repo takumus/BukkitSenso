@@ -17,4 +17,7 @@ public class Effects {
                 BLOOD_MATERIAL_DATA
         );
     }
+    public static void strikeLightning(Location location) {
+        location.getWorld().strikeLightningEffect(location);
+    }
 }
