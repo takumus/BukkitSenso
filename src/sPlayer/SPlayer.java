@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import sItem.SItem;
+import sItem.items.Grenade;
 import sItem.items.SuperBow;
 import sItem.items.Sword;
 import utils.ColorMap;
@@ -32,6 +33,7 @@ public class SPlayer {
         this.sItems = new ArrayList<>();
         this.addSItem(new Sword());
         this.addSItem(new SuperBow());
+        this.addSItem(new Grenade());
         this.player.setHealth(20D);
         this.metadata = new SPlayerMeta();
         dyeColor = DyeColor.GREEN;

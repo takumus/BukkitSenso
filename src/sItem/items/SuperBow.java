@@ -36,7 +36,7 @@ public class SuperBow extends SItem{
         this.bow.setItemMeta(meta);
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(this.bow);
         s.getTag().setBoolean("super_bow", true);
-        this.bow =  CraftItemStack.asBukkitCopy(s);
+        this.bow = CraftItemStack.asBukkitCopy(s);
     }
     @Override
     public void initItem() {

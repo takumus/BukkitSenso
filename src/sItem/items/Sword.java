@@ -1,6 +1,7 @@
 package sItem.items;
 
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,8 +27,10 @@ public class Sword extends SItem{
         this.sword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta =  this.sword.getItemMeta();
         meta.setDisplayName(this.getName());
-        meta.setLore(Arrays.asList("master_sword"));
         this.sword.setItemMeta(meta);
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(this.sword);
+        s.getTag().setBoolean("master_sword", true);
+        this.sword = CraftItemStack.asBukkitCopy(s);
     }
     @Override
     public void initItem() {
@@ -46,10 +49,8 @@ public class Sword extends SItem{
         ItemStack hand = me.getInventory().getItemInMainHand();
         if (hand.getType().equals(Material.AIR)) return;
 
-        List<String> lore = hand.getItemMeta().getLore();
-        if (lore == null) return;
-
-        if (!lore.contains("master_sword")) return;
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(hand);
+        if (s.getTag() == null || !s.getTag().getBoolean("master_sword")) return;
 
         SPlayer victim = SPlayerManager.getSPlayer((Player)entity);
         e.setCancelled(true);

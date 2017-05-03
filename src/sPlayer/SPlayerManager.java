@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class SPlayerManager implements Listener{
     private static SPlayerManager instance;
@@ -23,6 +24,9 @@ public class SPlayerManager implements Listener{
     }
     public static Collection<SPlayer> getAllSPlayer() {
         return instance.sPlayers.values();
+    }
+    public static SPlayer getSPlayer(UUID uuid) {
+        return SPlayerManager.getSPlayer(Bukkit.getServer().getPlayer(uuid));
     }
     public static SPlayer getSPlayer(Player player) {
         return instance.sPlayers.get(player);
