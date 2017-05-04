@@ -39,6 +39,55 @@ public class Deathmatch extends GameBase {
         meta.set(MetaKey.KILLER, null);
         meta.set(MetaKey.KILLED_LOCATION, null);
     }
+    private void killCamera(SPlayer sp) {
+        SPlayerMeta meta = sp.getMeta();
+        Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
+        int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
+        meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
+
+        Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
+
+        SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
+        if (count > 20) {
+            double progress = (count - 20) / 70D;
+            sp.sendTitle(
+                    ChatColor.YELLOW + "Respawning...",
+                    "[" + Utils.stringProgressBar(10, progress) + "]", 5
+            );
+        }
+        //自殺だったら
+        if (killer.equals(sp)) {
+            sp.getPlayer().teleport(killedPosForCamera);
+            if (count > 90) {
+                this.spawn(sp);
+            }
+            return;
+        }
+
+        //他殺の場合キルカメモード
+        Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
+        sp.lookAt(targetLocation);
+        if (count < 40) {
+            if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
+        }
+        if (count < 20) {
+            double vy = (Math.cos(count / 30D * Math.PI * 2 + Math.PI) + 1) / 2;
+            sp.getPlayer().teleport(killedPosForCamera.add(0, vy, 0));
+        }else if (count < 90){
+
+            double r = (count - 20) / 50D * Math.PI * 2;
+            r = r > Math.PI * 2 ? Math.PI * 2 : r;
+            double v = (Math.cos(r + Math.PI) + 1) / 2;
+            Vector dir = sp.getPlayer().getLocation().getDirection();
+            dir.multiply(v * 1.5 + (0.1 * r));
+            double distance = sp.getPlayer().getLocation().distance(targetLocation);
+            if (distance > 5) sp.getPlayer().teleport(killedPosForCamera.add(dir));
+        }else {
+            this.spawn(sp);
+            return;
+        }
+        sp.lookAt(targetLocation);
+    }
     @Override
     public boolean start(Stage stage) {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
@@ -57,52 +106,7 @@ public class Deathmatch extends GameBase {
             sp.getPlayer().setFoodLevel(30);
             SPlayerMeta meta = sp.getMeta();
             if (meta.getString(MetaKey.STATUS).equals(Status.KILL_CAMERA)) {
-                Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
-                int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
-                meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
-
-                Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
-
-                SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
-                if (count > 20) {
-                    double progress = (count - 20) / 70D;
-                    sp.sendTitle(
-                            ChatColor.YELLOW + "Respawning...",
-                            "[" + Utils.stringProgressBar(10, progress) + "]", 5
-                    );
-                }
-                //自殺だったら
-                if (killer.equals(sp)) {
-                    sp.getPlayer().teleport(killedPosForCamera);
-                    if (count > 90) {
-                        this.spawn(sp);
-                    }
-                    return;
-                }
-
-                //他殺の場合キルカメモード
-                Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
-                sp.lookAt(targetLocation);
-                if (count < 40) {
-                    if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
-                }
-                if (count < 20) {
-                    double vy = (Math.cos(count / 30D * Math.PI * 2 + Math.PI) + 1) / 2;
-                    sp.getPlayer().teleport(killedPosForCamera.add(0, vy, 0));
-                }else if (count < 90){
-
-                    double r = (count - 20) / 50D * Math.PI * 2;
-                    r = r > Math.PI * 2 ? Math.PI * 2 : r;
-                    double v = (Math.cos(r + Math.PI) + 1) / 2;
-                    Vector dir = sp.getPlayer().getLocation().getDirection();
-                    dir.multiply(v * 1.5 + (0.1 * r));
-                    double distance = sp.getPlayer().getLocation().distance(targetLocation);
-                    if (distance > 5) sp.getPlayer().teleport(killedPosForCamera.add(dir));
-                }else {
-                    this.spawn(sp);
-                    return;
-                }
-                sp.lookAt(targetLocation);
+                this.killCamera(sp);
             }
         });
     }
@@ -111,6 +115,7 @@ public class Deathmatch extends GameBase {
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
         SPlayer killer = weapon.getHolder();
         if (victim.equals(killer)) {
+            // 自殺
             victim.sendTitle(
                     killer.getChatColor() + "You " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
                     ChatColor.RED + weapon.getName(), 20 * 3,
@@ -118,6 +123,7 @@ public class Deathmatch extends GameBase {
             );
             this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + ChatColor.WHITE + "oneself" + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
         }else {
+            // 他殺
             victim.sendTitle(
                     killer.getChatColor() + "You " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
                     ChatColor.RED + weapon.getName(), 20 * 3,
@@ -132,8 +138,6 @@ public class Deathmatch extends GameBase {
 
         }
 
-        victim.clearInventory();
-
         victim.getMeta().set(MetaKey.STATUS, Status.KILL_CAMERA);
         victim.getMeta().set(MetaKey.KILL_CAMERA_COUNT, 0);
         victim.getMeta().set(MetaKey.NO_DAMAGE, true);
@@ -141,14 +145,15 @@ public class Deathmatch extends GameBase {
         victim.getMeta().set(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA, victim.getPlayer().getLocation().clone());
         victim.getMeta().set(MetaKey.KILLER, weapon.getHolder());
 
-        victim.playSound(Sound.ENTITY_ENDERMEN_DEATH, 1, 1, false);
-
-        killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
-
+        victim.clearInventory();
+        victim.setSItemsEnabled(false);
         victim.getPlayer().setHealth(20D);
         victim.addPotion(new PotionEffect(PotionEffectType.BLINDNESS, 30, 1));
         victim.addPotion(new PotionEffect(PotionEffectType.WITHER, 30, 1));
         victim.getPlayer().setGameMode(GameMode.SPECTATOR);
+
+        victim.playSound(Sound.ENTITY_ENDERMEN_DEATH, 1, 1, false);
+        killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
     }
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
