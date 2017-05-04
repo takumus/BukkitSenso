@@ -20,11 +20,10 @@ abstract public class SItem implements Listener{
     public void initHolder(SPlayer holder, int index) {
         this.holder = holder;
         this.index = index;
-        SItemManager.addSItem(this);
     }
     abstract public void initItem();
     public void destroy() {
-        SItemManager.removeItem(this);
+
     }
     public boolean getEnabled() {
         return this.enabled;

@@ -14,10 +14,10 @@ public class SItemManager {
     public static void init(JavaPlugin plugin) {
         SItemManager.plugin = plugin;
     }
-    public static void addSItem(SItem item) {
+    public static void addSItem(SItemController item) {
         Bukkit.getServer().getPluginManager().registerEvents(item, plugin);
     }
-    public static void removeItem(SItem item) {
+    public static void removeItem(SItemController item) {
         HandlerList.unregisterAll(item);
     }
     public static JavaPlugin getPlugin() {

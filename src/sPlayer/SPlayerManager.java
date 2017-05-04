@@ -1,5 +1,6 @@
 package sPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +29,7 @@ public class SPlayerManager implements Listener{
     public static SPlayer getSPlayer(UUID uuid) {
         return SPlayerManager.getSPlayer(Bukkit.getServer().getPlayer(uuid));
     }
-    public static SPlayer getSPlayer(Player player) {
+    public static SPlayer getSPlayer(Entity player) {
         return instance.sPlayers.get(player);
     }
     //----------

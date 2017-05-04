@@ -8,30 +8,30 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 import sItem.SItem;
-import sItem.items.Grenade;
-import sItem.items.SuperBow;
-import sItem.items.Sword;
+import sItem.items.grenade.Grenade;
+import sItem.items.superBow.SuperBow;
+import sItem.items.masterSword.MasterSword;
 import utils.ColorMap;
 import utils.Utils;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by takumus on 2017/04/26.
  */
 public class SPlayer {
     private Player player;
-    private ArrayList<SItem> sItems;
+    private Map<Class, SItem> sItems;
     private SItem lastDamagesWeapon;
     private SPlayerStatus status;
     private SPlayerMeta metadata;
     private DyeColor dyeColor;
     public SPlayer(Player player) {
         this.player = player;
-        this.sItems = new ArrayList<>();
-        this.addSItem(new Sword());
+        this.sItems = new HashMap<>();
+        this.addSItem(new MasterSword());
         this.addSItem(new SuperBow());
         this.addSItem(new Grenade());
         this.player.setHealth(20D);
@@ -51,22 +51,22 @@ public class SPlayer {
         this.addSItem(sItem, this.sItems.size());
     }
     public void addSItem(SItem sItem, int id) {
-        this.sItems.add(sItem);
+        this.sItems.put(sItem.getClass(), sItem);
         sItem.initHolder(this, id);
     }
     public void clearSItems() {
-        this.sItems.forEach((sItem) -> sItem.destroy());
+        this.sItems.values().forEach((sItem) -> sItem.destroy());
         this.sItems.clear();
         this.player.getInventory().clear();
     }
     public void clearInventory() {
         this.getPlayer().getInventory().clear();
     }
-    public ArrayList<SItem> getSItems() {
+    public Map<Class, SItem> getSItems() {
         return this.sItems;
     }
     public void setSItemsEnabled(boolean value) {
-        this.sItems.forEach((sItem) -> {
+        this.sItems.values().forEach((sItem) -> {
             sItem.setEnabled(value);
             if (value) {
                 sItem.initItem();
