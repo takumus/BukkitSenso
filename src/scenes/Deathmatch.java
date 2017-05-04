@@ -17,6 +17,7 @@ import sPlayer.SPlayerManager;
 import sPlayer.SPlayerMeta;
 import stages.Stage;
 import utils.Effects;
+import utils.Utils;
 
 /**
  * Created by takumus on 2017/04/30.
@@ -59,20 +60,17 @@ public class Deathmatch extends GameBase {
                 int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
                 meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
 
+                Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
+
                 SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
                 if (count > 30) {
                     double progress = (count - 30) / 90D;
-                    int maxLength = 10;
-                    double length = progress * maxLength;
-                    String bar = "";
-                    for (int i = 0; i < maxLength; i ++) {
-                        bar += i < length ? (length - i > 0.5D ? "#" : "=") : "-";
-                    }
                     sp.sendTitle(
-                            "respawning...",
-                            "[" + bar + "]", 10
+                            ChatColor.YELLOW + "Respawning...",
+                            "[" + Utils.stringProgressBar(10, progress) + "]", 10
                     );
                 }
+                //自殺だったら
                 if (killer.equals(sp)) {
                     sp.getPlayer().teleport(killedPosForCamera);
                     if (count > 120) {
@@ -80,6 +78,8 @@ public class Deathmatch extends GameBase {
                     }
                     return;
                 }
+
+                //他殺の場合キルカメモード
                 Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
                 sp.lookAt(targetLocation);
                 if (count < 40) {
@@ -101,7 +101,6 @@ public class Deathmatch extends GameBase {
                     this.spawn(sp);
                     return;
                 }
-                Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
                 sp.lookAt(targetLocation);
             }
         });
@@ -111,13 +110,13 @@ public class Deathmatch extends GameBase {
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
         this.message(weapon.getHolder().getNameWithColor() + ChatColor.GRAY + " -> " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
         victim.sendTitle(
-                ChatColor.WHITE + "Killed by " + victim.getNameWithColor(),
+                ChatColor.WHITE + "Killed by " + weapon.getHolder().getNameWithColor(),
                 ChatColor.RED + weapon.getName(), 20 * 3,
                 0, 20
         );
         weapon.getHolder().sendTitle(
                 "",
-                ChatColor.WHITE + "killed " + victim.getNameWithColor(), 10,
+                ChatColor.WHITE + "Killed " + victim.getNameWithColor(), 10,
                 0, 5
         );
 
