@@ -37,7 +37,7 @@ public class ColorMap {
         dyeNameMap.put(DyeColor.CYAN, "Cyan");
         dyeNameMap.put(DyeColor.GRAY, "Gray");
         dyeNameMap.put(DyeColor.GREEN, "Green");
-        dyeNameMap.put(DyeColor.LIGHT_BLUE, "Light Blue");
+        dyeNameMap.put(DyeColor.LIGHT_BLUE, "LightBlue");
         dyeNameMap.put(DyeColor.LIME, "Lime");
         dyeNameMap.put(DyeColor.MAGENTA, "Magenta");
         dyeNameMap.put(DyeColor.ORANGE, "Orange");
@@ -59,6 +59,6 @@ public class ColorMap {
         return dyeNameMap.get(dyeColor);
     }
     public static DyeColor getDyeColor(String name) {
-        return nameDyeMap.get(name);
+        return nameDyeMap.get(name.toLowerCase());
     }
 }

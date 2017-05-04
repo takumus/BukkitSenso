@@ -1,6 +1,7 @@
 package stages.stageEditor;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayer.SPlayer;
@@ -19,6 +20,7 @@ public class StageEditorManager {
         StageEditorManager.plugin = plugin;
     }
     public static void beginEdit(String stageName, String type, SPlayer editor) {
+        editor.getPlayer().setGameMode(GameMode.CREATIVE);
         Stage stage = StageManager.getStage(stageName, type);
         if (stage == null) stage = StageManager.createStage(stageName, type);
 
