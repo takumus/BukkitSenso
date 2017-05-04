@@ -13,7 +13,6 @@ abstract public class SItem implements Listener{
     private int index;
     private boolean enabled;
     private String name;
-    private JavaPlugin plugin;
     public SItem(String name) {
         this.name = name;
     }

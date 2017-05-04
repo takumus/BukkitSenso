@@ -138,4 +138,7 @@ public class SPlayer {
     public void lookAt(Entity target) {
         Utils.lookAt(this.getPlayer(), target.getLocation());
     }
+    public void message(String message) {
+        this.getPlayer().sendMessage(message);
+    }
 }

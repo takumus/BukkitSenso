@@ -13,6 +13,7 @@ import sPlayer.SPlayerManager;
 import scenes.Deathmatch;
 import scenes.GameBase;
 import stages.StageManager;
+import stages.stageEditor.StageEditorManager;
 import utils.MetadataManager;
 
 public class Main extends JavaPlugin {
@@ -20,6 +21,7 @@ public class Main extends JavaPlugin {
     public void onEnable(){
         StageManager.init(this);
         MetadataManager.init(this);
+        StageEditorManager.init(this);
         SItemManager.init(this);
         SPlayerManager.init(this);
         Bukkit.getServer().getPluginManager().registerEvents(new Deathmatch(this), this);
@@ -32,12 +34,14 @@ public class Main extends JavaPlugin {
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){
         if (sender instanceof Player) {
             SPlayer sp = SPlayerManager.getSPlayer((Player) sender);
-            if (args[0].equalsIgnoreCase("begin")) {
-                sp.setSItemsEnabled(true);
-                Bukkit.getServer().broadcastMessage("begin");
-            }else if(args[0].equalsIgnoreCase("end")) {
-                sp.setSItemsEnabled(false);
-                Bukkit.getServer().broadcastMessage("end");
+            if(args[0].equalsIgnoreCase("stage")) {
+                if (args[1].equalsIgnoreCase("edit")) {
+                    if (args[2].equalsIgnoreCase("begin")) {
+                        StageEditorManager.beginEdit(args[3], sp);
+                    }else if(args[2].equalsIgnoreCase("end")) {
+                        StageEditorManager.endEdit();
+                    }
+                }
             }
         }
         return true;

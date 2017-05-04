@@ -63,7 +63,7 @@ public class StageManager {
     public static void saveConfig() {
         System.out.println("save config");
         stages.values().forEach((s) -> {
-            ConfigurationSection section = config.createSection(s.getName().toLowerCase());
+            ConfigurationSection section = config.createSection(s.getName().toLowerCase() + ":" +  s.getType());
             List<Map<String, Object>> sm = new ArrayList<>();
             s.getSpawns().forEach((sp) -> {
                 Map<String, Object> mm = new HashMap<>();
