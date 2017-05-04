@@ -15,14 +15,19 @@ abstract public class StageEditor implements Listener {
     private SPlayer editor;
     abstract public void begin(SPlayer editor, Stage stage);
     abstract public void end();
+    abstract public void save();
     void _begin(SPlayer editor, Stage stage) {
         this.editor = editor;
         this.begin(editor, stage);
-        StageManager.saveConfig();
     }
     void _end() {
         this.end();
         this.editor = null;
+    }
+
+    void _save() {
+        this.save();
+        StageManager.saveConfig();
     }
     public SPlayer getEditor() {
         return this.editor;

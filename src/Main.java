@@ -1,4 +1,3 @@
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,7 +8,6 @@ import sItem.items.masterSword.MasterSwordController;
 import sItem.items.superBow.SuperBowController;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
-import scenes.Deathmatch;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import utils.CommandArgsWrapper;
@@ -38,9 +36,11 @@ public class Main extends JavaPlugin {
             if(a.at(0).equalsIgnoreCase("stage")) {
                 if (a.at(1).equalsIgnoreCase("edit")) {
                     if (a.at(2).equalsIgnoreCase("begin")) {
-                        StageEditorManager.beginEdit(a.at(3), a.at(4), sp);
+                        StageEditorManager.begin(a.at(3), a.at(4), sp);
                     }else if(a.at(2).equalsIgnoreCase("end")) {
-                        StageEditorManager.endEdit();
+                        StageEditorManager.end();
+                    }else if(a.at(2).equalsIgnoreCase("save")) {
+                        StageEditorManager.save();
                     }
                 }else if (a.at(1).equalsIgnoreCase("save")) {
                     StageManager.saveConfig();
