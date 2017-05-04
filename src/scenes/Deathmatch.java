@@ -52,13 +52,36 @@ public class Deathmatch extends GameBase {
             sp.getPlayer().getWorld().setTime(0);
             sp.getPlayer().getWorld().setStorm(false);
             sp.getPlayer().getWorld().setThundering(false);
+            sp.getPlayer().setFoodLevel(30);
             SPlayerMeta meta = sp.getMeta();
             if (meta.getString(MetaKey.STATUS).equals(Status.KILL_CAMERA)) {
+                Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
                 int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
+                meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
+
                 SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
+                if (count > 30) {
+                    double progress = (count - 30) / 90D;
+                    int maxLength = 10;
+                    double length = progress * maxLength;
+                    String bar = "";
+                    for (int i = 0; i < maxLength; i ++) {
+                        bar += i < length ? (length - i > 0.5D ? "#" : "=") : "-";
+                    }
+                    sp.sendTitle(
+                            "respawning...",
+                            "[" + bar + "]", 10
+                    );
+                }
+                if (killer.equals(sp)) {
+                    sp.getPlayer().teleport(killedPosForCamera);
+                    if (count > 120) {
+                        this.spawn(sp);
+                    }
+                    return;
+                }
                 Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
                 sp.lookAt(targetLocation);
-                Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
                 if (count < 40) {
                     if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
                 }
@@ -66,6 +89,7 @@ public class Deathmatch extends GameBase {
                     double vy = (Math.cos(count / 30D * Math.PI * 2 + Math.PI) + 1) / 2;
                     sp.getPlayer().teleport(killedPosForCamera.add(0, vy, 0));
                 }else if (count < 120){
+
                     double r = (count - 30) / 50D * Math.PI * 2;
                     r = r > Math.PI * 2 ? Math.PI * 2 : r;
                     double v = (Math.cos(r + Math.PI) + 1) / 2;
@@ -79,34 +103,23 @@ public class Deathmatch extends GameBase {
                 }
                 Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
                 sp.lookAt(targetLocation);
-
-                meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
             }
         });
     }
 
     @Override
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
-        if(weapon != null) {
-            this.message(weapon.getHolder().getNameWithColor() + ChatColor.GRAY + " -> " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
-            victim.sendTitle(
-                    ChatColor.WHITE + "Killed by " + victim.getNameWithColor(),
-                    ChatColor.RED + weapon.getName(), 20 * 3,
-                    0, 20
-            );
-            weapon.getHolder().sendTitle(
-                    "",
-                    ChatColor.WHITE + "killed " + victim.getNameWithColor(), 10,
-                    0, 5
-            );
-        }else {
-            this.message(ChatColor.MAGIC + "?????" + ChatColor.RESET + ChatColor.GRAY + " -> " + victim.getNameWithColor());
-            victim.sendTitle(
-                    ChatColor.WHITE + "Killed by " + ChatColor.GRAY + ChatColor.MAGIC + "?????",
-                    "", 20 * 3,
-                    0, 20
-            );
-        }
+        this.message(weapon.getHolder().getNameWithColor() + ChatColor.GRAY + " -> " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
+        victim.sendTitle(
+                ChatColor.WHITE + "Killed by " + victim.getNameWithColor(),
+                ChatColor.RED + weapon.getName(), 20 * 3,
+                0, 20
+        );
+        weapon.getHolder().sendTitle(
+                "",
+                ChatColor.WHITE + "killed " + victim.getNameWithColor(), 10,
+                0, 5
+        );
 
         victim.clearInventory();
 
