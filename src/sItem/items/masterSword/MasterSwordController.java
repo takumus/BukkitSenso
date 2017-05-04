@@ -24,7 +24,10 @@ public class MasterSwordController extends SItemController{
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(damager.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("master_sword")) return;
 
-        victim.damage(damager.getSItems().get(MasterSword.class), MasterSword.DAMAGE);
+        MasterSword sword = (MasterSword) damager.getSItems().get(MasterSword.class);
+        if (!sword.getEnabled()) return;
+
+        victim.damage(sword, MasterSword.DAMAGE);
 
         e.setCancelled(true);
     }

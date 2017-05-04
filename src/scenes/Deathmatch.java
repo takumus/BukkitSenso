@@ -56,7 +56,8 @@ public class Deathmatch extends GameBase {
             if (meta.getString(MetaKey.STATUS).equals(Status.KILL_CAMERA)) {
                 int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
                 SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
-                sp.lookAt(killer.getPlayer());
+                Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
+                sp.lookAt(targetLocation);
                 Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
                 if (count < 40) {
                     if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
@@ -70,14 +71,14 @@ public class Deathmatch extends GameBase {
                     double v = (Math.cos(r + Math.PI) + 1) / 2;
                     Vector dir = sp.getPlayer().getLocation().getDirection();
                     dir.multiply(v * 1.5 + (0.1 * r));
-                    double distance = sp.getPlayer().getLocation().distance(killer.getPlayer().getLocation());
+                    double distance = sp.getPlayer().getLocation().distance(targetLocation);
                     if (distance > 5) sp.getPlayer().teleport(killedPosForCamera.add(dir));
                 }else {
                     this.spawn(sp);
                     return;
                 }
                 Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
-                sp.lookAt(killer.getPlayer());
+                sp.lookAt(targetLocation);
 
                 meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
             }
@@ -127,6 +128,10 @@ public class Deathmatch extends GameBase {
         if (event.isCancelled()) return;
         SPlayer victim = SPlayerManager.getSPlayer((Player) event.getEntity());
         if (victim.getMeta().getBoolean(MetaKey.NO_DAMAGE)) {
+            event.setCancelled(true);
+            return;
+        }
+        if (victim.getLastDamagesWeapon() == null) {
             event.setCancelled(true);
             return;
         }

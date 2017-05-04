@@ -29,6 +29,7 @@ public class SuperBowController extends SItemController{
 
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(sp.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("super_bow")) return;
+        if (!sp.getSItems().get(SuperBow.class).getEnabled()) return;
 
         Arrow newArrow = sp.getPlayer().launchProjectile(Arrow.class);
         MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
@@ -46,6 +47,8 @@ public class SuperBowController extends SItemController{
         if (!MetadataManager.getMetadata(damagerEntity, "super_bow_arrow").equalsIgnoreCase("true")) return;
 
         SPlayer damager = SPlayerManager.getSPlayer((Entity) ((Projectile)damagerEntity).getShooter());
+        if (damager == null) return;
+        if (!damager.getSItems().get(SuperBow.class).getEnabled()) return;
 
         SPlayer victim = SPlayerManager.getSPlayer(e.getEntity());
         if (victim == null) return;

@@ -33,6 +33,8 @@ public class GrenadeController extends SItemController{
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(sp.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("snowball_grenade")) return;
 
+        if (!sp.getSItems().get(Grenade.class).getEnabled()) return;
+
         Snowball ball = sp.getPlayer().launchProjectile(Snowball.class);
         MetadataManager.setMetadata(ball, "snowball_grenade", "true");
 
@@ -44,11 +46,15 @@ public class GrenadeController extends SItemController{
         if (!MetadataManager.getMetadata(damager, "snowball_explode").equalsIgnoreCase("true")) return;
 
         SPlayer victim = SPlayerManager.getSPlayer(e.getEntity());
-        if(victim == null) return;
+        if (victim == null) return;
 
         SPlayer shooter = SPlayerManager.getSPlayer(UUID.fromString(MetadataManager.getMetadata(damager, "snowball_holder_uuid")));
+        if (shooter == null) return;
 
-        victim.damage(shooter.getSItems().get(Grenade.class), e.getDamage() * 2);
+        Grenade grenade = (Grenade) shooter.getSItems().get(Grenade.class);
+        if (!grenade.getEnabled()) return;
+
+        victim.damage(grenade, e.getDamage() * 2);
 
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
             shooter.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
@@ -63,6 +69,7 @@ public class GrenadeController extends SItemController{
 
         SPlayer shooter = SPlayerManager.getSPlayer((Entity) entity.getShooter());
         if (shooter == null) return;
+        if (!shooter.getSItems().get(Grenade.class).getEnabled()) return;
 
         entity.remove();
 
