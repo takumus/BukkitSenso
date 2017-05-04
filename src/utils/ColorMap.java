@@ -55,6 +55,9 @@ public class ColorMap {
     public static ChatColor getChatColor(DyeColor dyeColor) {
         return dyeChatMap.get(dyeColor);
     }
+    public static ChatColor getChatColor(String name) {
+        return dyeChatMap.get(getDyeColor(name));
+    }
     public static String getName(DyeColor dyeColor) {
         return dyeNameMap.get(dyeColor);
     }

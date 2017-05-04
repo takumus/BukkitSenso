@@ -21,8 +21,8 @@ abstract public class StageEditor implements Listener {
         StageManager.saveConfig();
     }
     void _end() {
-        this.editor = null;
         this.end();
+        this.editor = null;
     }
     public SPlayer getEditor() {
         return this.editor;
