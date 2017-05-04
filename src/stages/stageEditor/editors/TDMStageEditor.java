@@ -53,6 +53,25 @@ public class TDMStageEditor extends StageEditor {
         chest.setItemMeta(meta);
         return chest;
     }
+    private Zombie createZombie(Location location, DyeColor color) {
+        location.setPitch(0);
+        Zombie z = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
+        z.setBaby(false);
+        EntityZombie ez = ((CraftZombie)z).getHandle();
+        NBTTagCompound compound = new NBTTagCompound();
+        ez.c(compound);
+        compound.setByte("NoAI", (byte) 1);
+        ez.f(compound);
+        ez.setNoGravity(true);
+
+        z.getEquipment().setHelmet(this.createArmour(Material.LEATHER_HELMET, color));
+        z.getEquipment().setChestplate(this.createArmour(Material.LEATHER_CHESTPLATE, color));
+        z.getEquipment().setLeggings(this.createArmour(Material.LEATHER_LEGGINGS, color));
+        z.getEquipment().setBoots(this.createArmour(Material.LEATHER_BOOTS, color));
+        MetadataManager.setMetadata(z, "team_color_name", ColorMap.getName(color));
+        return z;
+    }
+
     @EventHandler (priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getViewers().size() != 1) return;
@@ -96,18 +115,7 @@ public class TDMStageEditor extends StageEditor {
         ChatColor color = ColorMap.getChatColor(colorName);
         this.getEditor().message(color + colorName + ChatColor.RESET + "'s spawn was removed");
     }
-    private Zombie createZombie(Location location) {
-        location.setPitch(0);
-        Zombie z = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
-        z.setBaby(false);
-        EntityZombie ez = ((CraftZombie)z).getHandle();
-        NBTTagCompound compound = new NBTTagCompound();
-        ez.c(compound);
-        compound.setByte("NoAI", (byte) 1);
-        ez.f(compound);
-        ez.setNoGravity(true);
-        return z;
-    }
+
     @EventHandler (priority = EventPriority.LOWEST)
     public void onRightClick(PlayerInteractEvent e) {
         if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
@@ -124,18 +132,13 @@ public class TDMStageEditor extends StageEditor {
             if (d < 1) return;
         }
 
-        DyeColor color = ColorMap.getDyeColor(colorString);
-        Zombie z = this.createZombie(this.getEditor().getPlayer().getLocation());
-        z.getEquipment().setHelmet(this.createArmour(Material.LEATHER_HELMET, color));
-        z.getEquipment().setChestplate(this.createArmour(Material.LEATHER_CHESTPLATE, color));
-        z.getEquipment().setLeggings(this.createArmour(Material.LEATHER_LEGGINGS, color));
-        z.getEquipment().setBoots(this.createArmour(Material.LEATHER_BOOTS, color));
-        MetadataManager.setMetadata(z, "team_color_name", colorString);
+        Zombie z = this.createZombie(this.getEditor().getPlayer().getLocation(), ColorMap.getDyeColor(colorString));
 
         this.markerZombies.add(z);
 
         this.getEditor().message(this.markerZombies.size() + " zombies");
     }
+
     @Override
     public void begin(SPlayer editor, Stage stage) {
         this.initWools(editor);
