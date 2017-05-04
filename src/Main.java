@@ -37,7 +37,7 @@ public class Main extends JavaPlugin {
             if(args[0].equalsIgnoreCase("stage")) {
                 if (args[1].equalsIgnoreCase("edit")) {
                     if (args[2].equalsIgnoreCase("begin")) {
-                        StageEditorManager.beginEdit(args[3], sp);
+                        StageEditorManager.beginEdit(args[3], args[4], sp);
                     }else if(args[2].equalsIgnoreCase("end")) {
                         StageEditorManager.endEdit();
                     }

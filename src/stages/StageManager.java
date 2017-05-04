@@ -19,7 +19,6 @@ public class StageManager {
     private static FileConfiguration config;
     private static File configFile;
     private static Map<String, Stage> stages;
-    private static Stage selectedStage;
     public static void init(JavaPlugin plugin) {
         configFile = new File(plugin.getDataFolder(), "data.yml");
         config = YamlConfiguration.loadConfiguration(configFile);
@@ -32,7 +31,6 @@ public class StageManager {
 
     }
     public static boolean addSpawn(Location location, String[] meta) {
-        if (selectedStage == null)  return false;
         Spawn spawn = new Spawn(location);
         boolean errorWithMeta = false;
         Arrays.asList(meta).forEach((metaStr) -> {
@@ -40,30 +38,20 @@ public class StageManager {
             //if (pair.length != 2) return false;
             spawn.setMeta(kv[0], kv[1]);
         });
-        selectedStage.addSpawn(spawn);
         return true;
     }
-    public static boolean createStage(String name, String type) {
-        if (stages.containsKey(name.toLowerCase())) return false;
-        Stage stage = new Stage(name, type);
-        selectStage(name);
-        return true;
+    public static Stage getStage(String name, String type) {
+        return stages.get(name + ":" + type);
     }
-    public static boolean removeStage(String name) {
-        if (!stages.containsKey(name)) return false;
-        stages.remove(name.toLowerCase());
-        return true;
-    }
-    public static boolean selectStage(String name) {
-        if (!stages.containsKey(name.toLowerCase())) return false;
-        Stage stage = stages.get(name.toLowerCase());
-        selectedStage = stage;
-        return true;
+    public static Stage createStage(String name, String type) {
+        Stage stage = new Stage(name, type.toLowerCase());
+        stages.put(name + ":" + type, stage);
+        return stage;
     }
     public static void saveConfig() {
         System.out.println("save config");
         stages.values().forEach((s) -> {
-            ConfigurationSection section = config.createSection(s.getName().toLowerCase() + ":" +  s.getType());
+            ConfigurationSection section = config.createSection(s.getName().toLowerCase() + ":" +  s.getType().toLowerCase());
             List<Map<String, Object>> sm = new ArrayList<>();
             s.getSpawns().forEach((sp) -> {
                 Map<String, Object> mm = new HashMap<>();
@@ -110,7 +98,7 @@ public class StageManager {
                 });
                 stage.addSpawn(spawn);
             });
-            stages.put(stage.getName().toLowerCase(), stage);
+            stages.put(stage.getName().toLowerCase() + stage.getType().toLowerCase(), stage);
         });
         System.out.println(stages.size() + " stages loaded.");
     }

@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayer.SPlayer;
+import stages.Stage;
+import stages.StageManager;
 import stages.stageEditor.editors.TDMStageEditor;
 
 /**
@@ -16,12 +18,15 @@ public class StageEditorManager {
     public static void init(JavaPlugin plugin) {
         StageEditorManager.plugin = plugin;
     }
-    public static void beginEdit(String type, SPlayer editor) {
+    public static void beginEdit(String stageName, String type, SPlayer editor) {
+        Stage stage = StageManager.getStage(stageName, type);
+        if (stage == null) stage = StageManager.createStage(stageName, type);
+
         if (type.equalsIgnoreCase("tdm")) {
-            editor.message("editing 'tdm' stage");
+            editor.message("editing stage '" + stage.getName() + "' tdm mode");
             editorSPlayer = editor;
             currentEditor = new TDMStageEditor();
-            currentEditor._begin(editorSPlayer);
+            currentEditor._begin(editorSPlayer, stage);
             Bukkit.getServer().getPluginManager().registerEvents(currentEditor, plugin);
         }
     }
