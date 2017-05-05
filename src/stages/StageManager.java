@@ -27,18 +27,16 @@ public class StageManager {
         loadConfig();
         saveConfig();
     }
-    public static void command(String[] args, CommandSender sender) {
-
+    public static Collection<Stage> getStages() {
+        return stages.values();
     }
-    public static boolean addSpawn(Location location, String[] meta) {
-        Spawn spawn = new Spawn(location);
-        boolean errorWithMeta = false;
-        Arrays.asList(meta).forEach((metaStr) -> {
-            String[] kv = metaStr.split(":");
-            //if (pair.length != 2) return false;
-            spawn.setMeta(kv[0], kv[1]);
+    public static Collection<Stage> getStages(String type) {
+        if (type.equals("")) return getStages();
+        List<Stage> stages = new ArrayList<>();
+        StageManager.stages.values().forEach((stage) -> {
+            if (stage.getType().equals(type.toLowerCase())) stages.add(stage);
         });
-        return true;
+        return stages;
     }
     public static Stage getStage(String name, String type) {
         return stages.get(name.toLowerCase() + ":" + type.toLowerCase());

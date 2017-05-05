@@ -1,6 +1,7 @@
 package stages.stageEditor;
 
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
@@ -124,13 +125,19 @@ abstract public class StageEditor implements Listener {
 
         if (!tag.getBoolean("use_for_stage_editor")) return;
 
+        e.setCancelled(true);
+
+        if (this.getSpawns().size() > 0 && !this.getSpawns().get(0).getWorld().equals(this.getEditor().getPlayer().getWorld())) {
+            this.getEditor().message(ChatColor.YELLOW + "Cannot add spawn to another world");
+            this.getEditor().message(ChatColor.YELLOW + "This stages world is " + this.getSpawns().get(0).getWorld().getName());
+            return;
+        }
+
         for (LivingEntity z : this.getSpawns()) {
             double d = z.getLocation().distance(this.getEditor().getPlayer().getLocation());
             if (d < 0.5) return;
         }
 
         this.addingSpawn(this.getEditor().getPlayer().getLocation(), tag);
-
-        e.setCancelled(true);
     }
 }

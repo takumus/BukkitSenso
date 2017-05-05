@@ -1,3 +1,4 @@
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,10 +9,13 @@ import sItem.items.masterSword.MasterSwordController;
 import sItem.items.superBow.SuperBowController;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import stages.Stage;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import utils.CommandArgsWrapper;
 import utils.MetadataManager;
+
+import java.util.List;
 
 public class Main extends JavaPlugin {
     @Override
@@ -45,6 +49,16 @@ public class Main extends JavaPlugin {
                 }else if (a.at(1).equalsIgnoreCase("save")) {
                     StageManager.saveConfig();
                     sp.message("stage saved");
+                }else if (a.at(1).equalsIgnoreCase("list")) {
+                    if (a.at(2).length() > 0) {
+                        sp.message(ChatColor.YELLOW + "--stages of " + a.at(2) + "--");
+                    }else {
+                        sp.message(ChatColor.YELLOW + "--stages--");
+                    }
+                    StageManager.getStages(a.at(2)).forEach((stage) -> {
+                        sp.message(stage.getName());
+                    });
+                    sp.message(ChatColor.YELLOW + "----------");
                 }
             }
         }
