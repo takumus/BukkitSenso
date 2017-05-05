@@ -24,9 +24,8 @@ import utils.Utils;
  * Created by takumus on 2017/04/30.
  */
 public class Deathmatch extends GameBase {
-    public Deathmatch(JavaPlugin plugin) {
-        super(plugin);
-        this.start(null);
+    public Deathmatch() {
+        super("tdm");
     }
     private void spawn(SPlayer sp) {
         sp.setSItemsEnabled(true);
@@ -89,10 +88,15 @@ public class Deathmatch extends GameBase {
         sp.lookAt(targetLocation);
     }
     @Override
-    public boolean start(Stage stage) {
+    public boolean begin(Stage stage) {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
             this.spawn(sp);
         });
+        return false;
+    }
+
+    @Override
+    public boolean end() {
         return false;
     }
 

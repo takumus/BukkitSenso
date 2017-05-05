@@ -18,13 +18,12 @@ import stages.Stage;
  * Created by takumus on 2017/04/30.
  */
 abstract public class GameBase implements Listener{
-    public GameBase(JavaPlugin plugin) {
-        System.out.println(111);
-        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin,  () -> {
-            this.onTick();
-        }, 0L, 1L);
+    private String type;
+    public GameBase(String type) {
+        this.type = type;
     }
-    abstract  public boolean start(Stage stage);
+    abstract  public boolean begin(Stage stage);
+    abstract  public boolean end();
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -52,5 +51,9 @@ abstract public class GameBase implements Listener{
 
     public void message(String message) {
         Bukkit.getServer().broadcastMessage(message);
+    }
+
+    public String getType() {
+        return this.type;
     }
 }

@@ -1,3 +1,5 @@
+import games.Deathmatch;
+import games.GameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -9,13 +11,10 @@ import sItem.items.masterSword.MasterSwordController;
 import sItem.items.superBow.SuperBowController;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
-import stages.Stage;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import utils.CommandArgsWrapper;
 import utils.MetadataManager;
-
-import java.util.List;
 
 public class Main extends JavaPlugin {
     @Override
@@ -25,11 +24,13 @@ public class Main extends JavaPlugin {
         StageEditorManager.init(this);
         SItemManager.init(this);
         SPlayerManager.init(this);
-        // Bukkit.getServer().getPluginManager().registerEvents(new Deathmatch(this), this);
+        GameManager.init(this);
 
         SItemManager.addSItem(new GrenadeController());
         SItemManager.addSItem(new SuperBowController());
         SItemManager.addSItem(new MasterSwordController());
+
+        GameManager.addGame(new Deathmatch());
     }
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){
