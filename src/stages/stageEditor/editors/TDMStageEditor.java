@@ -134,8 +134,6 @@ public class TDMStageEditor extends StageEditor {
         }
 
         Zombie z = this.addSpawn(this.getEditor().getPlayer().getLocation(), ColorMap.getDyeColor(colorString));
-
-        this.getEditor().message(this.markerZombies.size() + " zombies");
     }
 
     @Override
@@ -143,6 +141,7 @@ public class TDMStageEditor extends StageEditor {
         this.initWools(editor);
         this.markerZombies = new ArrayList<>();
 
+        editor.message(ChatColor.YELLOW.toString() + stage.getSpawns().size() + ChatColor.RESET + " spawns loaded");
         stage.getSpawns().forEach((spawn) -> {
             System.out.println(spawn);
             this.addSpawn(spawn.getLocation(), ColorMap.getDyeColor(spawn.getMeta("team")));

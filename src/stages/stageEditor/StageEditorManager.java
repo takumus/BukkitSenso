@@ -10,6 +10,9 @@ import stages.Stage;
 import stages.StageManager;
 import stages.stageEditor.editors.TDMStageEditor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by takumus on 2017/05/04.
  */
@@ -17,28 +20,35 @@ public class StageEditorManager {
     private static JavaPlugin plugin;
     private static StageEditor currentEditor;
     private static SPlayer editorSPlayer;
+    private static Map<String, StageEditor> editors;
     public static void init(JavaPlugin plugin) {
         StageEditorManager.plugin = plugin;
+        editors = new HashMap<>();
+        editors.put("tdm", new TDMStageEditor());
     }
     public static void begin(String stageName, String type, SPlayer editor) {
         if (currentEditor != null) {
             editor.message(ChatColor.RED + "Cannot begin editing while editing other stage");
             return;
         }
+        StageEditor stageEditor = editors.get(type.toLowerCase());
+        if (stageEditor == null) {
+            editor.message(ChatColor.RED + "type '" + type + "' is not found");
+            return;
+        }
+
         editor.getPlayer().setGameMode(GameMode.CREATIVE);
         Stage stage = StageManager.getStage(stageName, type);
         if (stage == null) {
-            editor.message(ChatColor.YELLOW + "editing stage '" + stage.getName() + "' tdm mode");
+            editor.message(ChatColor.YELLOW + "stage '" + stage.getName() + "' was created");
             stage = StageManager.createStage(stageName, type);
+        }else {
+            editor.message(ChatColor.YELLOW + "stage '" + stage.getName() + "' was selected");
         }
-
-        if (type.equalsIgnoreCase("tdm")) {
-            editor.message(ChatColor.YELLOW + "editing stage '" + stage.getName() + "' tdm mode");
-            editorSPlayer = editor;
-            currentEditor = new TDMStageEditor();
-            currentEditor._begin(editorSPlayer, stage);
-            Bukkit.getServer().getPluginManager().registerEvents(currentEditor, plugin);
-        }
+        editorSPlayer = editor;
+        currentEditor = stageEditor;
+        currentEditor._begin(editorSPlayer, stage);
+        Bukkit.getServer().getPluginManager().registerEvents(currentEditor, plugin);
     }
     public static void save() {
         if (currentEditor == null) return;
