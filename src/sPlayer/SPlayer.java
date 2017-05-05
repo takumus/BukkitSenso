@@ -14,6 +14,7 @@ import sItem.SItem;
 import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
+import teams.STeam;
 import teams.TeamSelector;
 import utils.ColorMap;
 import utils.Effects;
@@ -34,6 +35,7 @@ public class SPlayer {
     private SMeta metadata;
     private DyeColor dyeColor;
     private MaterialData coloredMaterial;
+    private STeam sTeam;
     public SPlayer(Player player) {
         this.player = player;
         this.sItems = new HashMap<>();
@@ -154,5 +156,11 @@ public class SPlayer {
     }
     public void blood(int amount) {
         Effects.blood(this.getPlayer().getLocation().add(0, 0.5, 0), amount, coloredMaterial);
+    }
+    public void setSTeam(STeam sTeam) {
+        this.sTeam = sTeam;
+    }
+    public STeam getSTeam() {
+        return  this.sTeam;
     }
 }

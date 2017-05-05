@@ -25,6 +25,7 @@ public class STeam {
     }
     public boolean addSPlayer(SPlayer sp) {
         if (this.members.contains(sp)) return false;
+        sp.setSTeam(this);
         this.members.add(sp);
         return true;
     }
@@ -38,5 +39,8 @@ public class STeam {
     }
     public String getName() {
         return this.name;
+    }
+    public DyeColor getDyeColor() {
+        return this.color;
     }
 }
