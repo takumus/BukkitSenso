@@ -25,8 +25,6 @@ public class Main extends JavaPlugin {
     public void onEnable(){
         StageManager.init(this);
         TeamSelector.init(this);
-        DyeColor[] teams = {DyeColor.BLUE};
-        TeamSelector.setTeams(Arrays.asList(teams));
         MetadataManager.init(this);
         StageEditorManager.init(this);
         SItemManager.init(this);
