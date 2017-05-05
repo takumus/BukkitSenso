@@ -17,10 +17,7 @@ import sPlayer.SPlayerManager;
 import utils.ColorMap;
 import utils.CreatorUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by takumus on 2017/05/06.
@@ -33,10 +30,11 @@ public class TeamSelector implements Listener{
         instance = new TeamSelector();
         Bukkit.getServer().getPluginManager().registerEvents(instance, plugin);
     }
-    public static void setTeams(List<DyeColor> teamDyeColors) {
+    public static void setTeams(Collection<String> teamDyeColorNames) {
         teamsInventory.clear();
         teams = new HashMap<>();
-        teamDyeColors.forEach((dc) -> {
+        teamDyeColorNames.forEach((s) -> {
+            DyeColor dc = ColorMap.getDyeColor(s);
             STeam team = new STeam(dc);
             NBTTagCompound tag = new NBTTagCompound();
             tag.setString("team_color_name", ColorMap.getName(dc));
