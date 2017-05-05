@@ -1,21 +1,17 @@
 package games;
 
-import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Wool;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
-import sPlayer.SPlayerMeta;
+import utils.SMeta;
 import stages.Stage;
 import utils.ColorMap;
 import utils.CreatorUtils;
@@ -53,7 +49,7 @@ public class Deathmatch extends GameBase {
                         sp.getDyeColor()
                 )
         );
-        SPlayerMeta meta = sp.getMeta();
+        SMeta meta = sp.getMeta();
         meta.set(MetaKey.KILL_CAMERA_COUNT, 0);
         meta.set(MetaKey.STATUS, Status.PLAY);
         meta.set(MetaKey.NO_DAMAGE, false);
@@ -61,7 +57,7 @@ public class Deathmatch extends GameBase {
         meta.set(MetaKey.KILLED_LOCATION, null);
     }
     private void killCamera(SPlayer sp) {
-        SPlayerMeta meta = sp.getMeta();
+        SMeta meta = sp.getMeta();
         Location killedPosForCamera = meta.getLocation(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA);
         int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
         meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
@@ -130,7 +126,7 @@ public class Deathmatch extends GameBase {
             sp.getPlayer().getWorld().setStorm(false);
             sp.getPlayer().getWorld().setThundering(false);
             sp.getPlayer().setFoodLevel(30);
-            SPlayerMeta meta = sp.getMeta();
+            SMeta meta = sp.getMeta();
             if (meta.getString(MetaKey.STATUS).equals(Status.KILL_CAMERA)) {
                 this.killCamera(sp);
             }
@@ -172,7 +168,6 @@ public class Deathmatch extends GameBase {
         victim.getMeta().set(MetaKey.KILLER, weapon.getHolder());
 
         victim.clearInventory();
-        victim.setSItemsEnabled(false);
         victim.getPlayer().setHealth(20D);
         victim.addPotion(new PotionEffect(PotionEffectType.BLINDNESS, 30, 1));
         victim.addPotion(new PotionEffect(PotionEffectType.WITHER, 30, 1));
