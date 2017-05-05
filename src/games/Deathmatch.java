@@ -1,4 +1,4 @@
-package scenes;
+package games;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;

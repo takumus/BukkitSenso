@@ -59,6 +59,7 @@ abstract public class StageEditor implements Listener {
     }
     void _end() {
         this.end();
+        this.editor.getPlayer().getInventory().clear();
         this.editor = null;
         this.stage = null;
     }
@@ -89,6 +90,7 @@ abstract public class StageEditor implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent e) {
         if (!e.getPlayer().equals(this.getEditor().getPlayer())) return;
+
         this.receiveValue(e.getMessage());
         e.setCancelled(true);
     }

@@ -27,7 +27,7 @@ public class StageEditorManager {
         editors.put("tdm", new TDMStageEditor());
     }
     public static void begin(String stageName, String type, SPlayer editor) {
-        if (currentEditor != null) {
+        if (isEditing()) {
             editor.message(ChatColor.RED + "Cannot begin editing while editing other stage");
             return;
         }
@@ -52,14 +52,18 @@ public class StageEditorManager {
         Bukkit.getServer().getPluginManager().registerEvents(currentEditor, plugin);
     }
     public static void save() {
-        if (currentEditor == null) return;
+        if (!isEditing()) return;
         currentEditor._save();
+        editorSPlayer.message(ChatColor.YELLOW + "Stage saved");
     }
     public static void end() {
-        if (currentEditor == null) return;
+        if (!isEditing()) return;
         save();
         HandlerList.unregisterAll(currentEditor);
         currentEditor._end();
         currentEditor = null;
+    }
+    public static boolean isEditing() {
+        return currentEditor != null;
     }
 }
