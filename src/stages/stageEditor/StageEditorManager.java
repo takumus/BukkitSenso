@@ -33,18 +33,19 @@ public class StageEditorManager {
         }
         StageEditor stageEditor = editors.get(type.toLowerCase());
         if (stageEditor == null) {
-            editor.message(ChatColor.RED + "type '" + type + "' is not found");
+            editor.message(ChatColor.RED + "Type '" + type + "' is not found");
             return;
         }
 
         editor.getPlayer().setGameMode(GameMode.CREATIVE);
         Stage stage = StageManager.getStage(stageName, type);
         if (stage == null) {
-            editor.message(ChatColor.YELLOW + "stage '" + stage.getName() + "' was created");
+            editor.message(ChatColor.YELLOW + "Stage '" + stage.getName() + "' was created");
             stage = StageManager.createStage(stageName, type);
         }else {
-            editor.message(ChatColor.YELLOW + "stage '" + stage.getName() + "' was selected");
+            editor.message(ChatColor.YELLOW + "Stage '" + stage.getName() + "' was selected");
         }
+        editor.message(ChatColor.YELLOW + "Stage type is '" + type + "'");
         editorSPlayer = editor;
         currentEditor = stageEditor;
         currentEditor._begin(editorSPlayer, stage);
