@@ -36,4 +36,7 @@ public class STeam {
     public void clear() {
         this.members.clear();
     }
+    public String getName() {
+        return this.name;
+    }
 }

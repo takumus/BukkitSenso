@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import teams.STeam;
 import utils.SMeta;
 import stages.Stage;
 import utils.ColorMap;
@@ -105,6 +106,12 @@ public class Deathmatch extends GameBase {
         }
         sp.lookAt(targetLocation);
     }
+
+    @Override
+    public void selectTeam(SPlayer sp, STeam sTeam) {
+        sp.message(sTeam.getName());
+    }
+
     @Override
     public boolean begin(Stage stage) {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
@@ -176,6 +183,7 @@ public class Deathmatch extends GameBase {
         victim.playSound(Sound.ENTITY_ENDERMEN_DEATH, 1, 1, false);
         killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
     }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;

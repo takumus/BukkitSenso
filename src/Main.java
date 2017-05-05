@@ -68,16 +68,17 @@ public class Main extends JavaPlugin {
                     });
                     sp.message(ChatColor.YELLOW + "----------");
                 }
-            }else {
-                if (a.at(0).equalsIgnoreCase("game")) {
-                    if (a.at(1).equalsIgnoreCase("begin")){
-                        GameManager.begin(a.at(2), a.at(3));
-                    }else if (a.at(1).equalsIgnoreCase("end")){
-                        GameManager.end();
-                    }
+            }else if (a.at(0).equalsIgnoreCase("game")) {
+                if (a.at(1).equalsIgnoreCase("begin")){
+                    GameManager.begin(a.at(2), a.at(3));
+                }else if (a.at(1).equalsIgnoreCase("end")){
+                    GameManager.end();
                 }
+            }else if (a.at(0).equalsIgnoreCase("team")) {
+                TeamSelector.showTeamSelector(sp);
             }
         }
+
         return true;
     }
 }

@@ -3,8 +3,10 @@ package games;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import sPlayer.SPlayer;
 import stages.Stage;
 import stages.StageManager;
+import teams.STeam;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +53,10 @@ public class GameManager {
         currentGame.end();
         HandlerList.unregisterAll(currentGame);
         currentGame = null;
+    }
+    public static void selectTeam(SPlayer sp, STeam sTeam) {
+        if (!isPlaying()) return;
+        currentGame.selectTeam(sp, sTeam);
     }
     public static boolean isPlaying() {
         return currentGame != null;

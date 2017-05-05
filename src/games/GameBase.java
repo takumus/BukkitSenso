@@ -13,6 +13,7 @@ import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 import stages.Stage;
+import teams.STeam;
 
 /**
  * Created by takumus on 2017/04/30.
@@ -22,10 +23,11 @@ abstract public class GameBase implements Listener{
     public GameBase(String type) {
         this.type = type;
     }
-    abstract  public boolean begin(Stage stage);
-    abstract  public boolean end();
+    abstract public boolean begin(Stage stage);
+    abstract public boolean end();
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
+    abstract public void selectTeam(SPlayer sp, STeam sTeam);
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;

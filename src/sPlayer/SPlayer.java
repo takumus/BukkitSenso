@@ -43,7 +43,6 @@ public class SPlayer {
         this.player.setHealth(20D);
         this.metadata = new SMeta();
         this.setDyeColor(DyeColor.LIGHT_BLUE);
-        TeamSelector.showTeamSelector(this);
     }
     public Player getPlayer() {
         return this.player;
