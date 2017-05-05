@@ -27,10 +27,13 @@ public class StageEditorManager {
         }
         editor.getPlayer().setGameMode(GameMode.CREATIVE);
         Stage stage = StageManager.getStage(stageName, type);
-        if (stage == null) stage = StageManager.createStage(stageName, type);
+        if (stage == null) {
+            editor.message(ChatColor.YELLOW + "editing stage '" + stage.getName() + "' tdm mode");
+            stage = StageManager.createStage(stageName, type);
+        }
 
         if (type.equalsIgnoreCase("tdm")) {
-            editor.message("editing stage '" + stage.getName() + "' tdm mode");
+            editor.message(ChatColor.YELLOW + "editing stage '" + stage.getName() + "' tdm mode");
             editorSPlayer = editor;
             currentEditor = new TDMStageEditor();
             currentEditor._begin(editorSPlayer, stage);

@@ -41,11 +41,11 @@ public class StageManager {
         return true;
     }
     public static Stage getStage(String name, String type) {
-        return stages.get(name + ":" + type);
+        return stages.get(name.toLowerCase() + ":" + type.toLowerCase());
     }
     public static Stage createStage(String name, String type) {
         Stage stage = new Stage(name, type.toLowerCase());
-        stages.put(name + ":" + type, stage);
+        stages.put(name.toLowerCase() + ":" + type.toLowerCase(), stage);
         return stage;
     }
     public static void saveConfig() {
@@ -98,7 +98,7 @@ public class StageManager {
                 });
                 stage.addSpawn(spawn);
             });
-            stages.put(stage.getName().toLowerCase() + stage.getType().toLowerCase(), stage);
+            stages.put(stage.getName().toLowerCase() + ":" + stage.getType().toLowerCase(), stage);
         });
         System.out.println(stages.size() + " stages loaded.");
     }

@@ -27,4 +27,7 @@ public class Stage {
     public String getType() {
         return this.type;
     }
+    public void clearSpawns() {
+        this.spawns.clear();
+    }
 }

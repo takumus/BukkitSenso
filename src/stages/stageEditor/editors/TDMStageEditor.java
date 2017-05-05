@@ -1,11 +1,9 @@
 package stages.stageEditor.editors;
 
-import net.minecraft.server.v1_11_R1.EntityZombie;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftZombie;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
-import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,12 +14,13 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import stages.Spawn;
 import stages.Stage;
 import stages.stageEditor.StageEditor;
 import utils.ColorMap;
+import utils.CreatorUtils;
 import utils.MetadataManager;
 
 import java.util.ArrayList;
@@ -43,35 +42,38 @@ public class TDMStageEditor extends StageEditor {
         }
     }
     private ItemStack createArmour(Material material, DyeColor color) {
-        ItemStack chest = new ItemStack(material, 1);
-        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(chest);
-        s.setTag(new NBTTagCompound());
-        s.getTag().setString("team_color_name", ColorMap.getName(color));
-        chest = CraftItemStack.asBukkitCopy(s);
-        LeatherArmorMeta meta = (LeatherArmorMeta)chest.getItemMeta();
-        meta.setColor(color.getColor());
-        chest.setItemMeta(meta);
-        return chest;
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setString("team_color_name", ColorMap.getName(color));
+        return CreatorUtils.createArmour(material, color, tag);
     }
     private Zombie createZombie(Location location, DyeColor color) {
         location.setPitch(0);
-        Zombie z = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
-        z.setBaby(false);
-        EntityZombie ez = ((CraftZombie)z).getHandle();
-        NBTTagCompound compound = new NBTTagCompound();
-        ez.c(compound);
-        compound.setByte("NoAI", (byte) 1);
-        ez.f(compound);
-        ez.setNoGravity(true);
+        Zombie z = CreatorUtils.createNoAIZombie(location);
 
-        z.getEquipment().setHelmet(this.createArmour(Material.LEATHER_HELMET, color));
         z.getEquipment().setChestplate(this.createArmour(Material.LEATHER_CHESTPLATE, color));
         z.getEquipment().setLeggings(this.createArmour(Material.LEATHER_LEGGINGS, color));
         z.getEquipment().setBoots(this.createArmour(Material.LEATHER_BOOTS, color));
         MetadataManager.setMetadata(z, "team_color_name", ColorMap.getName(color));
         return z;
     }
-
+    private Zombie addSpawn(Location location, DyeColor color) {
+        Zombie z = this.createZombie(location, color);
+        this.markerZombies.add(z);
+        return z;
+    }
+    private Map<String, List<Entity>> getSpawns() {
+        Map<String, List<Entity>> spawns = new HashMap<>();
+        this.markerZombies.forEach((zombie) -> {
+            String teamColor = MetadataManager.getMetadata(zombie, "team_color_name");
+            List<Entity> teamSpawns = spawns.get(teamColor.toLowerCase());
+            if (teamSpawns == null) {
+                teamSpawns = new ArrayList<>();
+                spawns.put(teamColor.toLowerCase(), teamSpawns);
+            }
+            teamSpawns.add(zombie);
+        });
+        return spawns;
+    }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getViewers().size() != 1) return;
@@ -91,7 +93,6 @@ public class TDMStageEditor extends StageEditor {
     public void onDropItem(PlayerDropItemEvent e) {
         NBTTagCompound tag = CraftItemStack.asNMSCopy(e.getItemDrop().getItemStack()).getTag();
         if (tag == null) return;
-
         String colorString = tag.getString("team_color_name");
         if (colorString == null) return;
 
@@ -132,9 +133,7 @@ public class TDMStageEditor extends StageEditor {
             if (d < 1) return;
         }
 
-        Zombie z = this.createZombie(this.getEditor().getPlayer().getLocation(), ColorMap.getDyeColor(colorString));
-
-        this.markerZombies.add(z);
+        Zombie z = this.addSpawn(this.getEditor().getPlayer().getLocation(), ColorMap.getDyeColor(colorString));
 
         this.getEditor().message(this.markerZombies.size() + " zombies");
     }
@@ -143,11 +142,25 @@ public class TDMStageEditor extends StageEditor {
     public void begin(SPlayer editor, Stage stage) {
         this.initWools(editor);
         this.markerZombies = new ArrayList<>();
+
+        stage.getSpawns().forEach((spawn) -> {
+            System.out.println(spawn);
+            this.addSpawn(spawn.getLocation(), ColorMap.getDyeColor(spawn.getMeta("team")));
+        });
     }
 
     @Override
     public void save() {
-        this.markerZombies.forEach((zombie) -> {
+        Map<String, List<Entity>> spawns = this.getSpawns();
+        Stage stage = this.getStage();
+        stage.clearSpawns();
+
+        spawns.entrySet().forEach((es) -> {
+            es.getValue().forEach((z) -> {
+                Spawn s = new Spawn(z.getLocation());
+                s.setMeta("team", es.getKey());
+                stage.addSpawn(s);
+            });
         });
     }
 

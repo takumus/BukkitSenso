@@ -13,16 +13,19 @@ import stages.StageManager;
  */
 abstract public class StageEditor implements Listener {
     private SPlayer editor;
+    private Stage stage;
     abstract public void begin(SPlayer editor, Stage stage);
     abstract public void end();
     abstract public void save();
     void _begin(SPlayer editor, Stage stage) {
         this.editor = editor;
+        this.stage = stage;
         this.begin(editor, stage);
     }
     void _end() {
         this.end();
         this.editor = null;
+        this.stage = null;
     }
 
     void _save() {
@@ -31,6 +34,9 @@ abstract public class StageEditor implements Listener {
     }
     public SPlayer getEditor() {
         return this.editor;
+    }
+    public Stage getStage() {
+        return this.stage;
     }
     abstract protected void receiveValue(String value);
     @EventHandler(priority = EventPriority.LOWEST)
