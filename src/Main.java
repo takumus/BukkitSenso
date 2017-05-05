@@ -38,7 +38,7 @@ public class Main extends JavaPlugin {
 
         if (sender instanceof Player) {
             SPlayer sp = SPlayerManager.getSPlayer((Player) sender);
-            if(a.at(0).equalsIgnoreCase("stage")) {
+            if (a.at(0).equalsIgnoreCase("stage")) {
                 if (a.at(1).equalsIgnoreCase("edit")) {
                     if (a.at(2).equalsIgnoreCase("begin")) {
                         StageEditorManager.begin(a.at(3), a.at(4), sp);
@@ -60,6 +60,14 @@ public class Main extends JavaPlugin {
                         sp.message(stage.getName());
                     });
                     sp.message(ChatColor.YELLOW + "----------");
+                }
+            }else {
+                if (a.at(0).equalsIgnoreCase("game")) {
+                    if (a.at(1).equalsIgnoreCase("begin")){
+                        GameManager.begin(a.at(2), a.at(3));
+                    }else if (a.at(1).equalsIgnoreCase("end")){
+                        GameManager.end();
+                    }
                 }
             }
         }

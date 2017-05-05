@@ -18,13 +18,16 @@ public class GameManager {
     private static GameBase currentGame;
     public static void init(JavaPlugin plugin) {
         GameManager.plugin = plugin;
+        Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            if (isPlaying()) currentGame.onTick();
+        }, 0L, 1L);
     }
-    public static boolean begin(String name, String stageName) {
+    public static boolean begin(String type, String stageName) {
         if (isPlaying()) {
             return false;
         }
 
-        GameBase game = games.get(name.toLowerCase());
+        GameBase game = games.get(type.toLowerCase());
         if (game == null) {
             return false;
         }

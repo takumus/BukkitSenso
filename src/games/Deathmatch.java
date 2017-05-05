@@ -1,13 +1,13 @@
 package games;
 
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import net.minecraft.server.v1_11_R1.NBTTagCompound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Wool;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,6 +17,8 @@ import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 import sPlayer.SPlayerMeta;
 import stages.Stage;
+import utils.ColorMap;
+import utils.CreatorUtils;
 import utils.Effects;
 import utils.Utils;
 
@@ -28,9 +30,29 @@ public class Deathmatch extends GameBase {
         super("tdm");
     }
     private void spawn(SPlayer sp) {
+        sp.setDyeColor(ColorMap.getRandomDyeColor());
+        sp.clearInventory();
         sp.setSItemsEnabled(true);
         sp.getPlayer().setGameMode(GameMode.SURVIVAL);
         sp.getPlayer().setWalkSpeed(0.3f);
+        sp.getPlayer().getEquipment().setChestplate(
+                CreatorUtils.createArmour(
+                        Material.LEATHER_CHESTPLATE,
+                        sp.getDyeColor()
+                )
+        );
+        sp.getPlayer().getEquipment().setLeggings(
+                CreatorUtils.createArmour(
+                        Material.LEATHER_LEGGINGS,
+                        sp.getDyeColor()
+                )
+        );
+        sp.getPlayer().getEquipment().setBoots(
+                CreatorUtils.createArmour(
+                        Material.LEATHER_BOOTS,
+                        sp.getDyeColor()
+                )
+        );
         SPlayerMeta meta = sp.getMeta();
         meta.set(MetaKey.KILL_CAMERA_COUNT, 0);
         meta.set(MetaKey.STATUS, Status.PLAY);
@@ -44,11 +66,11 @@ public class Deathmatch extends GameBase {
         int count = meta.getInt(MetaKey.KILL_CAMERA_COUNT);
         meta.set(MetaKey.KILL_CAMERA_COUNT, count + 1);
 
-        Effects.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
+        sp.blood(meta.getLocation(MetaKey.KILLED_LOCATION).clone().add(0, Math.random() + 0.2, 0), 30);
 
         SPlayer killer = meta.getSPlayer(MetaKey.KILLER);
-        if (count > 20) {
-            double progress = (count - 20) / 70D;
+        if (count > 40) {
+            double progress = (count - 40) / 80D;
             sp.sendTitle(
                     ChatColor.YELLOW + "Respawning...",
                     "[" + Utils.stringProgressBar(10, progress) + "]", 5
@@ -57,7 +79,7 @@ public class Deathmatch extends GameBase {
         //自殺だったら
         if (killer.equals(sp)) {
             sp.getPlayer().teleport(killedPosForCamera);
-            if (count > 90) {
+            if (count > 120) {
                 this.spawn(sp);
             }
             return;
@@ -69,12 +91,12 @@ public class Deathmatch extends GameBase {
         if (count < 40) {
             if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
         }
-        if (count < 20) {
+        if (count < 40) {
             double vy = (Math.cos(count / 30D * Math.PI * 2 + Math.PI) + 1) / 2;
             sp.getPlayer().teleport(killedPosForCamera.add(0, vy, 0));
-        }else if (count < 90){
+        }else if (count < 120){
 
-            double r = (count - 20) / 50D * Math.PI * 2;
+            double r = (count - 40) / 80D * Math.PI * 2;
             r = r > Math.PI * 2 ? Math.PI * 2 : r;
             double v = (Math.cos(r + Math.PI) + 1) / 2;
             Vector dir = sp.getPlayer().getLocation().getDirection();
@@ -92,7 +114,7 @@ public class Deathmatch extends GameBase {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
             this.spawn(sp);
         });
-        return false;
+        return true;
     }
 
     @Override
@@ -172,7 +194,7 @@ public class Deathmatch extends GameBase {
             event.setCancelled(true);
             return;
         }
-        Effects.blood(victim.getPlayer().getLocation().add(0, 1, 0), 100);
+        victim.blood(100);
     }
 }
 class MetaKey {

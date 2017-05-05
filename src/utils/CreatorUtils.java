@@ -26,6 +26,9 @@ public class CreatorUtils {
         i.setItemMeta(meta);
         return i;
     }
+    public static ItemStack createArmour(Material material, DyeColor color) {
+        return createArmour(material, color, new NBTTagCompound());
+    }
     public static PigZombie createNoAIZombie(Location location) {
         location.setPitch(0);
         PigZombie z = (PigZombie) location.getWorld().spawnEntity(location, EntityType.PIG_ZOMBIE);

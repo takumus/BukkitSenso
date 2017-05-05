@@ -3,8 +3,7 @@ package utils;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by takumus on 2017/04/30.
@@ -13,6 +12,7 @@ public class ColorMap {
     private static Map<DyeColor, ChatColor> dyeChatMap = new HashMap<>();
     private static Map<DyeColor, String> dyeNameMap = new HashMap<>();
     private static Map<String, DyeColor> nameDyeMap = new HashMap<>();
+    private static List<DyeColor> colors = new ArrayList<>();
     static {
         dyeChatMap.put(DyeColor.BLACK, ChatColor.DARK_GRAY);
         dyeChatMap.put(DyeColor.BLUE, ChatColor.DARK_BLUE);
@@ -50,6 +50,7 @@ public class ColorMap {
 
         dyeNameMap.entrySet().forEach((set) -> {
             nameDyeMap.put(set.getValue().toLowerCase(), set.getKey());
+            colors.add(set.getKey());
         });
     }
     public static ChatColor getChatColor(DyeColor dyeColor) {
@@ -63,5 +64,8 @@ public class ColorMap {
     }
     public static DyeColor getDyeColor(String name) {
         return nameDyeMap.get(name.toLowerCase());
+    }
+    public static DyeColor getRandomDyeColor() {
+        return colors.get((int)(colors.size() * Math.random()));
     }
 }

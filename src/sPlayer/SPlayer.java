@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import sItem.SItem;
@@ -13,6 +15,7 @@ import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
 import utils.ColorMap;
+import utils.Effects;
 import utils.Utils;
 
 import java.util.HashMap;
@@ -28,6 +31,7 @@ public class SPlayer {
     private SPlayerStatus status;
     private SPlayerMeta metadata;
     private DyeColor dyeColor;
+    private MaterialData coloredMaterial;
     public SPlayer(Player player) {
         this.player = player;
         this.sItems = new HashMap<>();
@@ -36,7 +40,7 @@ public class SPlayer {
         this.addSItem(new Grenade());
         this.player.setHealth(20D);
         this.metadata = new SPlayerMeta();
-        dyeColor = DyeColor.GREEN;
+        this.setDyeColor(DyeColor.LIGHT_BLUE);
     }
     public Player getPlayer() {
         return this.player;
@@ -111,6 +115,7 @@ public class SPlayer {
     }
     public void setDyeColor(DyeColor color) {
         this.dyeColor = color;
+        this.coloredMaterial = new Wool(color);
     }
     public void playSound(Sound sound, float volume, float pitch, boolean world) {
         Player p = this.getPlayer();
@@ -140,5 +145,12 @@ public class SPlayer {
     }
     public void message(String message) {
         this.getPlayer().sendMessage(message);
+    }
+
+    public void blood(Location location, int amount) {
+        Effects.blood(location, amount, coloredMaterial);
+    }
+    public void blood(int amount) {
+        Effects.blood(this.getPlayer().getLocation().add(0, 0.5, 0), amount, coloredMaterial);
     }
 }
