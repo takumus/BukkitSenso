@@ -1,6 +1,7 @@
-package sPlayer;
+package utils;
 
 import org.bukkit.Location;
+import sPlayer.SPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +9,9 @@ import java.util.Map;
 /**
  * Created by takumus on 2017/04/30.
  */
-public class SPlayerMeta {
+public class SMeta {
     private Map<String, Object> metadata;
-    public SPlayerMeta() {
+    public SMeta() {
         this.metadata = new HashMap<>();
     }
     public void clear() {

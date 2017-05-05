@@ -16,6 +16,7 @@ import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
 import utils.ColorMap;
 import utils.Effects;
+import utils.SMeta;
 import utils.Utils;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class SPlayer {
     private Map<Class, SItem> sItems;
     private SItem lastDamagesWeapon;
     private SPlayerStatus status;
-    private SPlayerMeta metadata;
+    private SMeta metadata;
     private DyeColor dyeColor;
     private MaterialData coloredMaterial;
     public SPlayer(Player player) {
@@ -39,7 +40,7 @@ public class SPlayer {
         this.addSItem(new SuperBow());
         this.addSItem(new Grenade());
         this.player.setHealth(20D);
-        this.metadata = new SPlayerMeta();
+        this.metadata = new SMeta();
         this.setDyeColor(DyeColor.LIGHT_BLUE);
     }
     public Player getPlayer() {
@@ -103,7 +104,7 @@ public class SPlayer {
         return this.status;
     }
 
-    public SPlayerMeta getMeta() {
+    public SMeta getMeta() {
         return this.metadata;
     }
 
