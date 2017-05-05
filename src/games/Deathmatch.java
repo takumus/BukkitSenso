@@ -11,7 +11,9 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import stages.Spawn;
 import teams.STeam;
+import teams.TeamSelector;
 import utils.SMeta;
 import stages.Stage;
 import utils.ColorMap;
@@ -19,15 +21,20 @@ import utils.CreatorUtils;
 import utils.Effects;
 import utils.Utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by takumus on 2017/04/30.
  */
 public class Deathmatch extends GameBase {
+    private Map<String, List<Location>> teamSpawns;
     public Deathmatch() {
         super("tdm");
     }
     private void spawn(SPlayer sp) {
-        sp.setDyeColor(ColorMap.getRandomDyeColor());
         sp.clearInventory();
         sp.setSItemsEnabled(true);
         sp.getPlayer().setGameMode(GameMode.SURVIVAL);
@@ -110,12 +117,27 @@ public class Deathmatch extends GameBase {
     @Override
     public void selectTeam(SPlayer sp, STeam sTeam) {
         sp.message(sTeam.getName());
+        sTeam.addSPlayer(sp);
+        sp.setDyeColor(sTeam.getDyeColor());
+        this.spawn(sp);
     }
 
     @Override
     public boolean begin(Stage stage) {
+        this.teamSpawns = new HashMap<>();
+        stage.getSpawns().forEach((spawn) -> {
+            String name = spawn.getMeta("team");
+            List<Location> spawns = teamSpawns.get(name.toLowerCase());
+            if (spawns == null) {
+                spawns = new ArrayList<>();
+                teamSpawns.put(name.toLowerCase(), spawns);
+            }
+            spawns.add(spawn.getLocation());
+        });
+        TeamSelector.setTeams(this.teamSpawns.keySet());
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
-            this.spawn(sp);
+            TeamSelector.showTeamSelector(sp);
+            sp.getMeta().set(MetaKey.STATUS, Status.NONE);
         });
         return true;
     }
@@ -209,6 +231,7 @@ class MetaKey {
     public static String KILLER = "killer";
 }
 class Status {
+    public static String NONE = "none";
     public static String KILL_CAMERA = "kill_camera";
     public static String PLAY = "playing";
 }
