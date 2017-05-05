@@ -54,7 +54,7 @@ public class GrenadeController extends SItemController{
         Grenade grenade = (Grenade) shooter.getSItems().get(Grenade.class);
         if (!grenade.getEnabled()) return;
 
-        victim.damage(grenade, e.getDamage() * 2);
+        victim.damage(grenade, e.getDamage() * 0.5);
 
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
             shooter.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);

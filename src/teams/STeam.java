@@ -34,6 +34,6 @@ public class STeam {
         return true;
     }
     public void clear() {
-
+        this.members.clear();
     }
 }

@@ -14,6 +14,7 @@ import sItem.SItem;
 import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
+import teams.TeamSelector;
 import utils.ColorMap;
 import utils.Effects;
 import utils.SMeta;
@@ -42,6 +43,7 @@ public class SPlayer {
         this.player.setHealth(20D);
         this.metadata = new SMeta();
         this.setDyeColor(DyeColor.LIGHT_BLUE);
+        TeamSelector.showTeamSelector(this);
     }
     public Player getPlayer() {
         return this.player;

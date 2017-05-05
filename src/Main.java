@@ -1,6 +1,7 @@
 import games.Deathmatch;
 import games.GameManager;
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,13 +14,19 @@ import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
+import teams.TeamSelector;
 import utils.CommandArgsWrapper;
 import utils.MetadataManager;
+
+import java.util.Arrays;
 
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
         StageManager.init(this);
+        TeamSelector.init(this);
+        DyeColor[] teams = {DyeColor.BLUE};
+        TeamSelector.setTeams(Arrays.asList(teams));
         MetadataManager.init(this);
         StageEditorManager.init(this);
         SItemManager.init(this);
