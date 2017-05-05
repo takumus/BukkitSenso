@@ -63,6 +63,8 @@ public class Deathmatch extends GameBase {
         meta.set(MetaKey.NO_DAMAGE, false);
         meta.set(MetaKey.KILLER, null);
         meta.set(MetaKey.KILLED_LOCATION, null);
+
+        this.teleportToSpawn(sp);
     }
     private void killCamera(SPlayer sp) {
         SMeta meta = sp.getMeta();
@@ -114,6 +116,12 @@ public class Deathmatch extends GameBase {
         sp.lookAt(targetLocation);
     }
 
+    private void teleportToSpawn(SPlayer sp) {
+        String name = sp.getSTeam().getName();
+        List<Location> spawns = teamSpawns.get(name.toLowerCase());
+        Location location = spawns.get((int)(Math.random() * spawns.size()));
+        sp.getPlayer().teleport(location);
+    }
     @Override
     public void selectTeam(SPlayer sp, STeam sTeam) {
         sp.message(sTeam.getName());
@@ -144,6 +152,10 @@ public class Deathmatch extends GameBase {
 
     @Override
     public boolean end() {
+        SPlayerManager.getAllSPlayer().forEach((sp) -> {
+            sp.setSItemsEnabled(false);
+            sp.clearInventory();
+        });
         return false;
     }
 
