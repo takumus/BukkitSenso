@@ -33,6 +33,7 @@ public class SPlayer {
     private SPlayerStatus status;
     private SMeta metadata;
     private DyeColor dyeColor;
+    private ChatColor chatColor;
     private MaterialData coloredMaterial;
     private STeam sTeam;
     public SPlayer(Player player) {
@@ -52,7 +53,10 @@ public class SPlayer {
         return this.player.getDisplayName();
     }
     public String getNameWithColor() {
-        return ChatColor.RESET + "" + this.getChatColor().toString() +  ChatColor.BOLD + this.player.getDisplayName() + ChatColor.RESET;
+        return this.getStringWithColor(this.getName());
+    }
+    public String getStringWithColor(String string) {
+        return ChatColor.RESET + "" + this.getChatColor().toString() +  ChatColor.BOLD + string + ChatColor.RESET;
     }
     public void addSItem(SItem sItem) {
         this.addSItem(sItem, this.sItems.size());
@@ -114,11 +118,13 @@ public class SPlayer {
         return this.dyeColor;
     }
     public ChatColor getChatColor() {
-        return ColorMap.getChatColor(this.dyeColor);
+        return this.chatColor;
     }
     public void setDyeColor(DyeColor color) {
         this.dyeColor = color;
         this.coloredMaterial = new Wool(color);
+        this.chatColor = ColorMap.getChatColor(this.dyeColor);
+        this.getPlayer().setPlayerListName(this.getNameWithColor());
     }
     public void playSound(Sound sound, float volume, float pitch, boolean world) {
         Player p = this.getPlayer();
