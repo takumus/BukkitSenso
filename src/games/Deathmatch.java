@@ -222,15 +222,23 @@ public class Deathmatch extends GameBase {
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;
+
         SPlayer victim = SPlayerManager.getSPlayer((Player) event.getEntity());
         if (victim.getMeta().getBoolean(MetaKey.NO_DAMAGE)) {
             event.setCancelled(true);
             return;
         }
+
         if (victim.getLastDamagesWeapon() == null) {
             event.setCancelled(true);
             return;
         }
+        //同チームからのダメージは無効
+        if (victim.getSTeam().equals(victim.getLastDamagesWeapon().getHolder().getSTeam()) && !victim.equals(victim.getLastDamagesWeapon().getHolder())) {
+            event.setCancelled(true);
+            return;
+        }
+
         victim.blood(100);
     }
 }
