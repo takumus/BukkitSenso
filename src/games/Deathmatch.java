@@ -14,12 +14,8 @@ import sPlayer.SPlayerManager;
 import stages.Spawn;
 import teams.STeam;
 import teams.TeamSelector;
-import utils.SMeta;
+import utils.*;
 import stages.Stage;
-import utils.ColorMap;
-import utils.CreatorUtils;
-import utils.Effects;
-import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +33,6 @@ public class Deathmatch extends GameBase {
     private void spawn(SPlayer sp) {
         sp.clearInventory();
         sp.setSItemsEnabled(true);
-        sp.getPlayer().setGameMode(GameMode.SURVIVAL);
         sp.getPlayer().setWalkSpeed(0.3f);
         sp.getPlayer().getEquipment().setChestplate(
                 CreatorUtils.createArmour(
@@ -65,6 +60,9 @@ public class Deathmatch extends GameBase {
         meta.set(MetaKey.KILLED_LOCATION, null);
 
         this.teleportToSpawn(sp);
+        DelayedTask.task(() -> {
+            sp.getPlayer().setGameMode(GameMode.SURVIVAL);
+        }, 1L);
     }
     private void killCamera(SPlayer sp) {
         SMeta meta = sp.getMeta();

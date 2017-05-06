@@ -16,6 +16,7 @@ import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import teams.TeamSelector;
 import utils.CommandArgsWrapper;
+import utils.DelayedTask;
 import utils.MetadataManager;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
+        DelayedTask.init(this);
         StageManager.init(this);
         TeamSelector.init(this);
         MetadataManager.init(this);
