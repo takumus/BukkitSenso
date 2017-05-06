@@ -54,6 +54,7 @@ public class GameManager {
             return;
         }
         currentGame.end();
+        currentPlayers.clear();
         HandlerList.unregisterAll(currentGame);
         currentGame = null;
     }

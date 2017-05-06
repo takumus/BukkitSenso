@@ -11,3 +11,5 @@ commands:
     description: senso
   stage:
     description: senso
+  team:
+    description: senso

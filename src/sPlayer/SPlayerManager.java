@@ -1,4 +1,5 @@
 package sPlayer;
+import games.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -32,6 +33,15 @@ public class SPlayerManager implements Listener{
     public static SPlayer getSPlayer(Entity player) {
         return instance.sPlayers.get(player);
     }
+
+    public static void message(String message) {
+        getAllSPlayer().forEach((sp) -> sp.message(message));
+    }
+    public static void message(String message, SPlayer withoutMe) {
+        getAllSPlayer().forEach((sp) -> {
+            if (!sp.equals(withoutMe)) sp.message(message);
+        });
+    }
     //----------
     //
     //----------
@@ -42,6 +52,9 @@ public class SPlayerManager implements Listener{
     }
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent event) {
+        SPlayer sp = getSPlayer(event.getPlayer());
+        GameManager.removePlayer(sp);
+        sp.leaveSTeam();
         this.removeSPlayer(event.getPlayer());
     }
     public void addSPlayer(Player player) {

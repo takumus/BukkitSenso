@@ -1,8 +1,10 @@
 package teams;
 
+import games.GameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import sPlayer.SPlayer;
+import sPlayer.SPlayerManager;
 import utils.ColorMap;
 
 import java.util.ArrayList;
@@ -30,15 +32,23 @@ public class STeam {
     public boolean addSPlayer(SPlayer sp) {
         if (this.members.contains(sp)) return false;
         if (sp.getSTeam() != null) sp.getSTeam().removeSPlayer(sp);
-        sp.setSTeam(this);
+        sp.joinSTeam(this);
         this.members.add(sp);
         sp.message("You joined to " + this.chatColor + this.getName());
+        SPlayerManager.message(
+                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " joined to " + this.getChatColor() + this.getName(),
+                sp
+        );
         return true;
     }
     public boolean removeSPlayer(SPlayer sp) {
         if (!this.members.contains(sp)) return false;
         this.members.remove(sp);
         sp.message("You left from " + this.chatColor + this.getName());
+        SPlayerManager.message(
+                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " left from " + this.getChatColor() + this.getName(),
+                sp
+        );
         return true;
     }
     public void clear() {
@@ -55,5 +65,10 @@ public class STeam {
     }
     public List<SPlayer> getMembers () {
         return this.members;
+    }
+    public void message(String message) {
+        this.members.forEach((sp) -> {
+            sp.message(message);
+        });
     }
 }

@@ -52,7 +52,7 @@ public class SPlayer {
         return this.player.getDisplayName();
     }
     public String getNameWithColor() {
-        return ChatColor.RESET.toString() + ChatColor.BOLD.toString() + this.getChatColor().toString() + this.player.getDisplayName() + ChatColor.RESET.toString();
+        return ChatColor.RESET + "" + this.getChatColor().toString() +  ChatColor.BOLD + this.player.getDisplayName() + ChatColor.RESET;
     }
     public void addSItem(SItem sItem) {
         this.addSItem(sItem, this.sItems.size());
@@ -156,8 +156,11 @@ public class SPlayer {
     public void blood(int amount) {
         Effects.blood(this.getPlayer().getLocation().add(0, 0.5, 0), amount, coloredMaterial);
     }
-    public void setSTeam(STeam sTeam) {
+    public void joinSTeam(STeam sTeam) {
         this.sTeam = sTeam;
+    }
+    public void leaveSTeam() {
+        if (this.sTeam != null) this.sTeam.removeSPlayer(this);
     }
     public STeam getSTeam() {
         return  this.sTeam;
