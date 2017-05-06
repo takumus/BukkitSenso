@@ -70,7 +70,7 @@ public class SuperBowController extends SItemController{
 
         victim.damage(damager.getSItems().get(SuperBow.class), 10D);
 
-        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
+        DelayedTask.task(() -> {
             damager.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
         }, 2L);
 

@@ -15,6 +15,7 @@ import sItem.SItemController;
 import sItem.SItemManager;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import utils.DelayedTask;
 import utils.MetadataManager;
 
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class GrenadeController extends SItemController{
 
         victim.damage(grenade, e.getDamage() * 0.5);
 
-        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(SItemManager.getPlugin(), () -> {
+        DelayedTask.task(() -> {
             shooter.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
         }, 2L);
 
