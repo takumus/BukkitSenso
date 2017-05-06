@@ -3,6 +3,7 @@ package teams;
 import games.GameManager;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
@@ -11,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
@@ -37,8 +40,13 @@ public class TeamSelector implements Listener{
             DyeColor dc = ColorMap.getDyeColor(s);
             STeam team = new STeam(dc);
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("team_color_name", ColorMap.getName(dc));
-            teamsInventory.addItem(CreatorUtils.createArmour(Material.LEATHER_CHESTPLATE, dc, tag));
+            String teamName = ColorMap.getName(dc);
+            tag.setString("team_color_name", teamName);
+            ItemStack armour = CreatorUtils.createArmour(Material.LEATHER_CHESTPLATE, dc, tag);
+            ItemMeta meta = armour.getItemMeta();
+            meta.setDisplayName(team.getChatColor() + teamName);
+            armour.setItemMeta(meta);
+            teamsInventory.addItem(armour);
             teams.put(dc, team);
         });
     }
@@ -76,5 +84,11 @@ public class TeamSelector implements Listener{
 
         Bukkit.getServer().getPluginManager().callEvent(new STeamEvent(sTeam));
         GameManager.selectTeam(sp, sTeam);
+
+        ItemMeta meta = e.getCurrentItem().getItemMeta();
+        List<String> memberNames = new ArrayList<>();
+        sTeam.getMembers().forEach((msp) -> memberNames.add(ChatColor.RESET + msp.getName()));
+        meta.setLore(memberNames);
+        e.getCurrentItem().setItemMeta(meta);
     }
 }
