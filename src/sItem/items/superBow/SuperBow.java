@@ -10,21 +10,14 @@ import sItem.SItem;
  * Created by takumus on 2017/04/28.
  */
 public class SuperBow extends SItem{
-    private ItemStack bow;
     private static double DAMAGE = 100D;
     public SuperBow() {
-        super("Super Bow");
-        this.bow = new ItemStack(Material.BOW);
-        ItemMeta meta =  this.bow.getItemMeta();
-        meta.setDisplayName(this.getName());
-        this.bow.setItemMeta(meta);
-        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(this.bow);
-        s.getTag().setBoolean("super_bow", true);
-        this.bow = CraftItemStack.asBukkitCopy(s);
+        super("Super Bow", new ItemStack(Material.BOW), "super_bow");
     }
+
     @Override
     public void initItem() {
-        this.setItem(this.bow);
-        this.getHolder().getPlayer().getInventory().setItem(9, new ItemStack(Material.ARROW, 64));
+        super.initItem();
+        this.getHolder().addItemToSub(new ItemStack(Material.ARROW, 64));
     }
 }

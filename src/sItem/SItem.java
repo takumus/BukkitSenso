@@ -1,7 +1,9 @@
 package sItem;
 
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayer.SPlayer;
 
@@ -13,14 +15,24 @@ abstract public class SItem implements Listener{
     private int index;
     private boolean enabled;
     private String name;
-    public SItem(String name) {
+    private ItemStack item;
+    public SItem(String name, ItemStack item, String id) {
         this.name = name;
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(this.getName());
+        item.setItemMeta(meta);
+        net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(item);
+        s.getTag().setBoolean(id, true);
+        this.item = CraftItemStack.asBukkitCopy(s);
     }
     public void initHolder(SPlayer holder, int index) {
         this.holder = holder;
         this.index = index;
     }
-    abstract public void initItem();
+    public void initItem() {
+        this.holder.getPlayer().getInventory().setItem(this.index, this.item);
+    }
     public void destroy() {
 
     }
@@ -29,9 +41,6 @@ abstract public class SItem implements Listener{
     }
     public void setEnabled(boolean value) {
         this.enabled = value;
-    }
-    public void setItem(ItemStack item) {
-        this.holder.getPlayer().getInventory().setItem(this.index, item);
     }
     public String getName() {
         return this.name;
