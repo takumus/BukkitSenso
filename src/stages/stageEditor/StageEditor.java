@@ -132,12 +132,15 @@ abstract public class StageEditor implements Listener {
             this.getEditor().message(ChatColor.YELLOW + "This stages world is " + this.getSpawns().get(0).getWorld().getName());
             return;
         }
+        Location loc = this.getEditor().getPlayer().getLocation();
+        loc.setX(Math.floor(loc.getX()) + 0.5);
+        loc.setY(Math.floor(loc.getY()));
+        loc.setZ(Math.floor(loc.getZ()) + 0.5);
 
         for (LivingEntity z : this.getSpawns()) {
-            double d = z.getLocation().distance(this.getEditor().getPlayer().getLocation());
+            double d = z.getLocation().distance(loc);
             if (d < 0.5) return;
         }
-
-        this.addingSpawn(this.getEditor().getPlayer().getLocation(), tag);
+        this.addingSpawn(loc, tag);
     }
 }
