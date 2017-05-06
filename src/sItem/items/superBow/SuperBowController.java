@@ -16,12 +16,22 @@ import sItem.SItemController;
 import sItem.SItemManager;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
+import utils.DelayedTask;
 import utils.MetadataManager;
 
 /**
  * Created by takumus on 2017/05/04.
  */
 public class SuperBowController extends SItemController{
+    private void shootArrow(SPlayer sp, Vector v) {
+        Arrow newArrow = sp.getPlayer().launchProjectile(Arrow.class);
+        MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
+        v.multiply(100);
+        newArrow.setVelocity(v);
+
+        sp.playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onShoot(EntityShootBowEvent e) {
         SPlayer sp = SPlayerManager.getSPlayer(e.getEntity());
@@ -31,13 +41,18 @@ public class SuperBowController extends SItemController{
         if (s.getTag() == null || !s.getTag().getBoolean("super_bow")) return;
         if (!sp.getSItems().get(SuperBow.class).getEnabled()) return;
 
-        Arrow newArrow = sp.getPlayer().launchProjectile(Arrow.class);
-        MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
-        Vector v = e.getProjectile().getVelocity().clone().normalize();
-        v.multiply(100);
-        newArrow.setVelocity(v);
+        Vector v = e.getProjectile().getVelocity();
+        Vector nv = v.clone().normalize();
 
-        sp.playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
+        double power = v.distance(new Vector());
+
+        this.shootArrow(sp, nv);
+
+        if (power > 2.6) {
+            DelayedTask.task(() -> {
+                this.shootArrow(sp, nv);
+            }, 2L);
+        }
 
         e.setCancelled(true);
     }
