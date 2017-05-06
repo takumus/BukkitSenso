@@ -34,9 +34,10 @@ public class STeam {
         if (sp.getSTeam() != null) sp.getSTeam().removeSPlayer(sp);
         sp.joinSTeam(this);
         this.members.add(sp);
-        sp.message("You joined to " + this.chatColor + this.getName());
+        //メッセージ配信
+        sp.message("You joined to " + this.getNameWithColor());
         SPlayerManager.message(
-                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " joined to " + this.getChatColor() + this.getName(),
+                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " joined to " + this.getNameWithColor(),
                 sp
         );
         return true;
@@ -44,9 +45,10 @@ public class STeam {
     public boolean removeSPlayer(SPlayer sp) {
         if (!this.members.contains(sp)) return false;
         this.members.remove(sp);
-        sp.message("You left from " + this.chatColor + this.getName());
+        //メッセージ配信
+        sp.message("You left from " + this.getNameWithColor());
         SPlayerManager.message(
-                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " left from " + this.getChatColor() + this.getName(),
+                ChatColor.BOLD + sp.getName() + ChatColor.RESET + " left from " + this.getNameWithColor(),
                 sp
         );
         return true;
@@ -65,6 +67,13 @@ public class STeam {
     }
     public List<SPlayer> getMembers () {
         return this.members;
+    }
+
+    public String getNameWithColor() {
+        return this.getStringWithColor(this.name);
+    }
+    public String getStringWithColor(String string) {
+        return ChatColor.RESET + "" + this.getChatColor() + "" + ChatColor.BOLD + string + ChatColor.RESET;
     }
     public void message(String message) {
         this.members.forEach((sp) -> {
