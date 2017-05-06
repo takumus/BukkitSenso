@@ -16,12 +16,13 @@ public class STeam {
     private ChatColor chatColor;
     private String name;
     private List<SPlayer> members;
-
+    int _selectorId;
     public STeam(DyeColor color, String name) {
         this.color = color;
         this.chatColor = ColorMap.getChatColor(color);
         this.name = name;
         this.members = new ArrayList<>();
+        this._selectorId = 0;
     }
     public STeam(DyeColor color) {
         this(color, ColorMap.getName(color));

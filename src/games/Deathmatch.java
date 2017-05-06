@@ -17,10 +17,7 @@ import teams.TeamSelector;
 import utils.*;
 import stages.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by takumus on 2017/04/30.
@@ -122,9 +119,9 @@ public class Deathmatch extends GameBase {
     }
     @Override
     public void selectTeam(SPlayer sp, STeam sTeam) {
-        sp.message(sTeam.getName());
         sTeam.addSPlayer(sp);
         sp.setDyeColor(sTeam.getDyeColor());
+        GameManager.addPlayer(sp);
         this.spawn(sp);
     }
 
@@ -140,17 +137,17 @@ public class Deathmatch extends GameBase {
             }
             spawns.add(spawn.getLocation());
         });
+
         TeamSelector.setTeams(this.teamSpawns.keySet());
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
             TeamSelector.showTeamSelector(sp);
-            sp.getMeta().set(MetaKey.STATUS, Status.NONE);
         });
         return true;
     }
 
     @Override
     public boolean end() {
-        SPlayerManager.getAllSPlayer().forEach((sp) -> {
+        GameManager.getCurrentPlayers().forEach((sp) -> {
             sp.setSItemsEnabled(false);
             sp.clearInventory();
         });
@@ -159,7 +156,7 @@ public class Deathmatch extends GameBase {
 
     @Override
     public void onTick() {
-        SPlayerManager.getAllSPlayer().forEach((sp) -> {
+        GameManager.getCurrentPlayers().forEach((sp) -> {
             sp.getPlayer().setSneaking(true);
             sp.getPlayer().getWorld().setTime(0);
             sp.getPlayer().getWorld().setStorm(false);
@@ -231,6 +228,12 @@ public class Deathmatch extends GameBase {
             event.setCancelled(true);
             return;
         }
+
+        if (victim.getSTeam() == null) {
+            event.setCancelled(true);
+            return;
+        }
+
         //同チームからのダメージは無効
         if (victim.getSTeam().equals(victim.getLastDamagesWeapon().getHolder().getSTeam()) && !victim.equals(victim.getLastDamagesWeapon().getHolder())) {
             event.setCancelled(true);

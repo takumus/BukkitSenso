@@ -12,6 +12,6 @@ public class DelayedTask {
         DelayedTask.plugin = plugin;
     }
     public static void task(Runnable runnable, long tick) {
-        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(plugin, runnable, tick);
+        Bukkit.getServer().getScheduler().runTaskLater(plugin, runnable, tick);
     }
 }

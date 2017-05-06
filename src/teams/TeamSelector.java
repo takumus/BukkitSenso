@@ -36,9 +36,11 @@ public class TeamSelector implements Listener{
     public static void setTeams(Collection<String> teamDyeColorNames) {
         teamsInventory.clear();
         teams = new HashMap<>();
-        teamDyeColorNames.forEach((s) -> {
+        int id = 0;
+        for (String s : teamDyeColorNames) {
             DyeColor dc = ColorMap.getDyeColor(s);
             STeam team = new STeam(dc);
+            team._selectorId = id++;
             NBTTagCompound tag = new NBTTagCompound();
             String teamName = ColorMap.getName(dc);
             tag.setString("team_color_name", teamName);
@@ -48,7 +50,7 @@ public class TeamSelector implements Listener{
             armour.setItemMeta(meta);
             teamsInventory.addItem(armour);
             teams.put(dc, team);
-        });
+        };
     }
     public static void showTeamSelectorToAllPlayers() {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
@@ -82,13 +84,21 @@ public class TeamSelector implements Listener{
         STeam sTeam = teams.get(teamColor);
         if (sTeam == null) return;
 
-        Bukkit.getServer().getPluginManager().callEvent(new STeamEvent(sTeam));
+        // Bukkit.getServer().getPluginManager().callEvent(new STeamEvent(sTeam));
         GameManager.selectTeam(sp, sTeam);
 
-        ItemMeta meta = e.getCurrentItem().getItemMeta();
-        List<String> memberNames = new ArrayList<>();
-        sTeam.getMembers().forEach((msp) -> memberNames.add(ChatColor.RESET + msp.getName()));
-        meta.setLore(memberNames);
-        e.getCurrentItem().setItemMeta(meta);
+        this.updateTeam();
+    }
+    public static void updateTeam() {
+        teams.entrySet().forEach((es) -> {
+            STeam st = es.getValue();
+            ItemStack item = teamsInventory.getItem(st._selectorId);
+
+            ItemMeta meta = item.getItemMeta();
+            List<String> memberNames = new ArrayList<>();
+            st.getMembers().forEach((msp) -> memberNames.add(ChatColor.RESET + msp.getName()));
+            meta.setLore(memberNames);
+            item.setItemMeta(meta);
+        });
     }
 }
