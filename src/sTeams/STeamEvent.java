@@ -1,4 +1,4 @@
-package teams;
+package sTeams;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

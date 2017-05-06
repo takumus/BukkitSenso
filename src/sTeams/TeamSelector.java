@@ -1,4 +1,4 @@
-package teams;
+package sTeams;
 
 import games.GameManager;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
@@ -15,8 +15,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import utils.ColorMap;
 import utils.CreatorUtils;
 

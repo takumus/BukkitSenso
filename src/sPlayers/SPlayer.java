@@ -1,4 +1,4 @@
-package sPlayer;
+package sPlayers;
 
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -13,8 +13,7 @@ import sItem.SItem;
 import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
-import teams.STeam;
-import teams.TeamSelector;
+import sTeams.STeam;
 import utils.ColorMap;
 import utils.Effects;
 import utils.SMeta;

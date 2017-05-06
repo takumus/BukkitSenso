@@ -5,7 +5,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import sPlayer.SPlayer;
+import sPlayers.SPlayer;
 import stages.Spawn;
 import stages.Stage;
 import stages.stageEditor.StageEditor;

@@ -8,12 +8,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import sItem.SItem;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import stages.Stage;
-import teams.STeam;
+import sTeams.STeam;
 
 /**
  * Created by takumus on 2017/04/30.

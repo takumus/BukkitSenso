@@ -1,4 +1,4 @@
-package sScoreboard;
+package sScoreboards;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;

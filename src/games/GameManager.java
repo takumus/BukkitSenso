@@ -3,10 +3,10 @@ package games;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import sPlayer.SPlayer;
+import sPlayers.SPlayer;
 import stages.Stage;
 import stages.StageManager;
-import teams.STeam;
+import sTeams.STeam;
 
 import java.util.ArrayList;
 import java.util.HashMap;

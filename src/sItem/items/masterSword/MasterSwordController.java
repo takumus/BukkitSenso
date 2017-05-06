@@ -5,8 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import sItem.SItemController;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 
 /**
  * Created by takumus on 2017/05/04.

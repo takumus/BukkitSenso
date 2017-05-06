@@ -1,10 +1,9 @@
-package teams;
+package sTeams;
 
-import games.GameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import utils.ColorMap;
 
 import java.util.ArrayList;

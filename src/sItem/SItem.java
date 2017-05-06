@@ -4,8 +4,7 @@ import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
-import sPlayer.SPlayer;
+import sPlayers.SPlayer;
 
 /**
  * Created by takumus on 2017/04/28.

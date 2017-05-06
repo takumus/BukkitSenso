@@ -16,12 +16,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import stages.Stage;
 import stages.StageManager;
-import utils.ColorMap;
 import utils.CreatorUtils;
 import utils.MetadataManager;
 

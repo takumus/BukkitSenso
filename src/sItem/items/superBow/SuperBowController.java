@@ -1,6 +1,5 @@
 package sItem.items.superBow;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
@@ -13,9 +12,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.util.Vector;
 import sItem.SItemController;
-import sItem.SItemManager;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import utils.DelayedTask;
 import utils.MetadataManager;
 

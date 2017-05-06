@@ -9,10 +9,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import sItem.SItem;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
-import teams.STeam;
-import teams.TeamSelector;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
+import sTeams.STeam;
+import sTeams.TeamSelector;
 import utils.*;
 import stages.Stage;
 

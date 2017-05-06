@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import sPlayer.SPlayer;
+import sPlayers.SPlayer;
 import stages.Stage;
 import stages.StageManager;
 import stages.stageEditor.editors.TDMStageEditor;

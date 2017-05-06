@@ -1,7 +1,6 @@
 import games.Deathmatch;
 import games.GameManager;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,16 +9,14 @@ import sItem.SItemManager;
 import sItem.items.grenade.GrenadeController;
 import sItem.items.masterSword.MasterSwordController;
 import sItem.items.superBow.SuperBowController;
-import sPlayer.SPlayer;
-import sPlayer.SPlayerManager;
+import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
-import teams.TeamSelector;
+import sTeams.TeamSelector;
 import utils.CommandArgsWrapper;
 import utils.DelayedTask;
 import utils.MetadataManager;
-
-import java.util.Arrays;
 
 public class Main extends JavaPlugin {
     @Override
