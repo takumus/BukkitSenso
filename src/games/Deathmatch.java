@@ -178,7 +178,7 @@ public class Deathmatch extends GameBase {
         if (victim.equals(killer)) {
             // 自殺
             victim.sendTitle(
-                    killer.getChatColor() + "You " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
+                    victim.getChatColor() + "You " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
                     ChatColor.RED + weapon.getName(), 20 * 3,
                     0, 20
             );
@@ -186,7 +186,7 @@ public class Deathmatch extends GameBase {
         }else {
             // 他殺
             victim.sendTitle(
-                    killer.getChatColor() + "You " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
+                    victim.getChatColor() + "You " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
                     ChatColor.RED + weapon.getName(), 20 * 3,
                     0, 20
             );
