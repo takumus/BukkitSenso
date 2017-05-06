@@ -1,11 +1,10 @@
 package sPlayer;
 
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
@@ -162,5 +161,18 @@ public class SPlayer {
     }
     public STeam getSTeam() {
         return  this.sTeam;
+    }
+
+    public void addItemToMain(int i, ItemStack item) {
+        this.getPlayer().getInventory().setItem(i, item);
+    }
+    public void addItemToSub(ItemStack item) {
+        Inventory inv = this.getPlayer().getInventory();
+        for (int i = 9; i < 36; i ++) {
+            if (inv.getItem(i) == null || inv.getItem(i).getType().equals(Material.AIR)) {
+                inv.setItem(i, item);
+                return;
+            }
+        }
     }
 }
