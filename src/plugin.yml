@@ -3,6 +3,11 @@ main: Main
 version: 1.0
 author: takumus
 description: hello
+depend: [Multiverse-Core]
 commands:
   senso:
-     description: senso
+    description: senso
+  game:
+    description: senso
+  stage:
+    description: senso

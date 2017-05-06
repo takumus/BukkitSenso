@@ -25,7 +25,6 @@ public class StageManager {
         stages = new HashMap<>();
 
         loadConfig();
-        saveConfig();
     }
     public static Collection<Stage> getStages() {
         return stages.values();

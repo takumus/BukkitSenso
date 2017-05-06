@@ -40,39 +40,38 @@ public class Main extends JavaPlugin {
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){
         CommandArgsWrapper a = new CommandArgsWrapper(args);
-
         if (sender instanceof Player) {
             SPlayer sp = SPlayerManager.getSPlayer((Player) sender);
-            if (a.at(0).equalsIgnoreCase("stage")) {
-                if (a.at(1).equalsIgnoreCase("edit")) {
-                    if (a.at(2).equalsIgnoreCase("begin")) {
-                        StageEditorManager.begin(a.at(3), a.at(4), sp);
-                    }else if(a.at(2).equalsIgnoreCase("end")) {
+            if (commandLabel.equalsIgnoreCase("stage")) {
+                if (a.at(0).equalsIgnoreCase("edit")) {
+                    if (a.at(1).equalsIgnoreCase("begin")) {
+                        StageEditorManager.begin(a.at(2), a.at(3), sp);
+                    }else if(a.at(1).equalsIgnoreCase("end")) {
                         StageEditorManager.end();
-                    }else if(a.at(2).equalsIgnoreCase("save")) {
+                    }else if(a.at(1).equalsIgnoreCase("save")) {
                         StageEditorManager.save();
                     }
-                }else if (a.at(1).equalsIgnoreCase("save")) {
+                }else if (a.at(0).equalsIgnoreCase("save")) {
                     StageManager.saveConfig();
                     sp.message("stage saved");
-                }else if (a.at(1).equalsIgnoreCase("list")) {
-                    if (a.at(2).length() > 0) {
-                        sp.message(ChatColor.YELLOW + "--stages of " + a.at(2) + "--");
+                }else if (a.at(0).equalsIgnoreCase("list")) {
+                    if (a.at(1).length() > 0) {
+                        sp.message(ChatColor.YELLOW + "--stages of " + a.at(1) + "--");
                     }else {
                         sp.message(ChatColor.YELLOW + "--stages--");
                     }
-                    StageManager.getStages(a.at(2)).forEach((stage) -> {
+                    StageManager.getStages(a.at(1)).forEach((stage) -> {
                         sp.message(stage.getName());
                     });
                     sp.message(ChatColor.YELLOW + "----------");
                 }
-            }else if (a.at(0).equalsIgnoreCase("game")) {
-                if (a.at(1).equalsIgnoreCase("begin")){
-                    GameManager.begin(a.at(2), a.at(3));
-                }else if (a.at(1).equalsIgnoreCase("end")){
+            }else if (commandLabel.equalsIgnoreCase("game")) {
+                if (a.at(0).equalsIgnoreCase("begin")){
+                    GameManager.begin(a.at(1), a.at(2));
+                }else if (a.at(0).equalsIgnoreCase("end")){
                     GameManager.end();
                 }
-            }else if (a.at(0).equalsIgnoreCase("team")) {
+            }else if (commandLabel.equalsIgnoreCase("team")) {
                 TeamSelector.showTeamSelector(sp);
             }
         }
