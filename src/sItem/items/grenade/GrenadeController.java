@@ -33,10 +33,13 @@ public class GrenadeController extends SItemController{
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(sp.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("snowball_grenade")) return;
 
-        if (!sp.getSItems().get(Grenade.class).getEnabled()) return;
+        Grenade item = (Grenade) sp.getSItems().get(Grenade.class);
+        if (!item.getEnabled()) return;
 
         Snowball ball = sp.getPlayer().launchProjectile(Snowball.class);
         MetadataManager.setMetadata(ball, "snowball_grenade", "true");
+
+        sp.playSound(Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f, false);
 
         e.setCancelled(true);
     }
