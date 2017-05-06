@@ -11,7 +11,6 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayer.SPlayer;
 import sPlayer.SPlayerManager;
-import stages.Spawn;
 import teams.STeam;
 import teams.TeamSelector;
 import utils.*;
@@ -139,6 +138,7 @@ public class Deathmatch extends GameBase {
         });
 
         TeamSelector.setTeams(this.teamSpawns.keySet());
+
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
             TeamSelector.showTeamSelector(sp);
         });
@@ -175,21 +175,24 @@ public class Deathmatch extends GameBase {
         if (victim.equals(killer)) {
             // 自殺
             victim.sendTitle(
-                    victim.getChatColor() + "You " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
-                    ChatColor.RED + weapon.getName(), 20 * 3,
+                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
+                    ChatColor.RED + weapon.getName(),
+                    20 * 3,
                     0, 20
             );
             this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + ChatColor.WHITE + "oneself" + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
         }else {
             // 他殺
             victim.sendTitle(
-                    victim.getChatColor() + "You " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
-                    ChatColor.RED + weapon.getName(), 20 * 3,
+                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
+                    ChatColor.RED + weapon.getName(),
+                    20 * 3,
                     0, 20
             );
             killer.sendTitle(
                     "",
-                    killer.getChatColor() + "You " + ChatColor.WHITE + "Killed " + victim.getNameWithColor(), 10,
+                    killer.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed " + victim.getNameWithColor(),
+                    20,
                     0, 5
             );
             this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
