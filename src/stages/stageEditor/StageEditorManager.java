@@ -40,8 +40,8 @@ public class StageEditorManager {
         editor.getPlayer().setGameMode(GameMode.CREATIVE);
         Stage stage = StageManager.getStage(stageName, type);
         if (stage == null) {
-            editor.message(ChatColor.YELLOW + "Stage '" + stage.getName() + "' was created");
             stage = StageManager.createStage(stageName, type);
+            editor.message(ChatColor.YELLOW + "Stage '" + stage.getName() + "' was created");
         }else {
             editor.message(ChatColor.YELLOW + "Stage '" + stage.getName() + "' was selected");
         }
