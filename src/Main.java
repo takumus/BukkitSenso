@@ -15,12 +15,14 @@ import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import sTeams.TeamSelector;
 import utils.CommandArgsWrapper;
+import utils.DamageArrow;
 import utils.DelayedTask;
 import utils.MetadataManager;
 
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
+        DamageArrow.init(this);
         DelayedTask.init(this);
         StageManager.init(this);
         TeamSelector.init(this);

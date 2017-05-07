@@ -219,6 +219,8 @@ public class Deathmatch extends GameBase {
             );
             this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
         }
+        victim.hideDamageArrow();
+        killer.hideDamageArrow();
 
         victim.getMeta().set(MetaKey.STATUS, Status.KILL_CAMERA);
         victim.getMeta().set(MetaKey.KILL_CAMERA_COUNT, 0);
@@ -276,7 +278,7 @@ public class Deathmatch extends GameBase {
             return;
         }
 
-        DamageArrow.show(victim, victim.getLastDamagesWeapon().getHolder().getPlayer().getLocation());
+        victim.showDamageArrow(victim.getLastDamagesWeapon().getHolder().getPlayer().getLocation());
         victim.blood(100);
     }
 }

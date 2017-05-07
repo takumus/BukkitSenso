@@ -15,10 +15,7 @@ import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
 import sItem.items.masterSword.MasterSword;
 import sTeams.STeam;
-import utils.ColorMap;
-import utils.Effects;
-import utils.SMeta;
-import utils.Utils;
+import utils.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -225,5 +222,11 @@ public class SPlayer {
     }
     public int getDeath() {
         return this.death;
+    }
+    public void showDamageArrow(Location target) {
+        DamageArrow.show(this, target);
+    }
+    public void hideDamageArrow() {
+        DamageArrow.hide(this);
     }
 }
