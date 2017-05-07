@@ -77,7 +77,7 @@ public class Deathmatch extends GameBase {
         if (count > 40) {
             double progress = (count - 40) / 80D;
             sp.sendTitle(
-                    ChatColor.YELLOW + "Respawning...",
+                    ChatColor.YELLOW + killer.getKillMessage(),
                     "[" + Utils.stringProgressBar(10, progress) + "]", 5
             );
         }
