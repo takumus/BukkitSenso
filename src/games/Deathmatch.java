@@ -195,7 +195,9 @@ public class Deathmatch extends GameBase {
     @Override
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
         SPlayer killer = weapon.getHolder();
+        boolean suicide = false;
         if (victim.equals(killer)) {
+            suicide = true;
             // 自殺
             victim.sendTitle(
                     victim.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
@@ -240,12 +242,17 @@ public class Deathmatch extends GameBase {
         killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
 
         //スコア
+        int score;
+        if (suicide) {
+            score = -100;
+        }else {
+            killer.addKill(1);
+            killer.getSTeam().addKill(1);
+            score = 100;
+        }
         victim.addDeath(1);
         victim.getSTeam().addDeath(1);
 
-        killer.addKill(1);
-        killer.getSTeam().addKill(1);
-        int score = 100;
         killer.addScore(score);
         killer.getSTeam().addScore(score);
 
