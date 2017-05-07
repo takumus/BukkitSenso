@@ -62,7 +62,14 @@ public class SuperBowController extends SItemController{
 
         net.minecraft.server.v1_11_R1.ItemStack s = CraftItemStack.asNMSCopy(sp.getPlayer().getInventory().getItemInMainHand());
         if (s.getTag() == null || !s.getTag().getBoolean("super_bow")) return;
-        if (!sp.getSItems().get(SuperBow.class).getEnabled()) return;
+
+        e.setCancelled(true);
+
+        SuperBow item = (SuperBow) sp.getSItems().get(SuperBow.class);
+        if (!item.getEnabled()) return;
+        if (item.isReloading()) return;
+
+        item.reload(10);
 
         Vector v = e.getProjectile().getVelocity();
         Vector nv = v.clone().normalize();
@@ -76,8 +83,6 @@ public class SuperBowController extends SItemController{
                 this.shootArrow(sp, nv);
             }, 2L);
         }
-
-        e.setCancelled(true);
     }
     @EventHandler (priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
