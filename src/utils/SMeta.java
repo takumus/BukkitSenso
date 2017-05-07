@@ -24,6 +24,7 @@ public class SMeta {
         return ((Double)this.metadata.get(key)).doubleValue();
     }
     public boolean getBoolean(String key) {
+        if (this.metadata.get(key) == null) return false;
         return ((Boolean)this.metadata.get(key)).booleanValue();
     }
     public String getString(String key) {
