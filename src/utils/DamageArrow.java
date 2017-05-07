@@ -17,38 +17,37 @@ public class DamageArrow {
     private static double offset = unit / 2;
     public static void init(JavaPlugin plugin) {
         Bukkit.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            GameManager.getCurrentPlayers().forEach((sp) -> {
-                if (!sp.getMeta().getBoolean("damage_arrow")) return;
-                int count = sp.getMeta().getInt("damage_arrow_count");
-                Location loc = sp.getMeta().getLocation("damage_arrow_location");
+            GameManager.getCurrentPlayers().forEach((victim) -> {
+                if (!victim.getMeta().getBoolean("damage_arrow")) return;
+                int count = victim.getMeta().getInt("damage_arrow_count");
+                SPlayer damager = victim.getMeta().getSPlayer("damage_arrow_damager");
                 count ++;
-                if (count > 20 * 3) {
-                    sp.getMeta().set("damage_arrow", false);
+                if (count > 20 * 4) {
+                    victim.getMeta().set("damage_arrow", false);
                     return;
                 }
-                sp.getMeta().set("damage_arrow_count", count);
-                sendArrow(sp, loc);
+                victim.getMeta().set("damage_arrow_count", count);
+
+                Location vL = victim.getPlayer().getLocation();
+                Location dL = damager.getPlayer().getLocation();
+                double dx = dL.getX() - vL.getX();
+                double dz = dL.getZ() - vL.getZ();
+                double rad = normalize(Math.atan2(dz, dx) - Math.PI / 2);
+                double rad2 = normalize(vL.getYaw() / 180 * Math.PI);
+                double diff = normalize(rad - rad2 + offset);
+                String arrow = arrows[(int)(diff / unit)];
+                victim.sendTitle(ChatColor.RED + arrow, count < 12 ? damager.getNameWithColor(false) : "", 10, 0, 1);
             });
         }, 0L, 1L);
-    }
-    private static void sendArrow(SPlayer victim, Location damager) {
-        Location vL = victim.getPlayer().getLocation();
-        double dx = damager.getX() - vL.getX();
-        double dz = damager.getZ() - vL.getZ();
-        double rad = normalize(Math.atan2(dz, dx) - Math.PI / 2);
-        double rad2 = normalize(vL.getYaw() / 180 * Math.PI);
-        double diff = normalize(rad - rad2 + offset);
-        String arrow = arrows[(int)(diff / unit)];
-        victim.sendTitle(ChatColor.RED + arrow, "", 10, 0, 10);
     }
     public static void hide(SPlayer sp) {
         sp.getMeta().set("damage_arrow", false);
     }
-    public static void show(SPlayer sp, Location target) {
+    public static void show(SPlayer victim, SPlayer damager) {
 
-        sp.getMeta().set("damage_arrow", true);
-        sp.getMeta().set("damage_arrow_location", target.clone());
-        sp.getMeta().set("damage_arrow_count", 0);
+        victim.getMeta().set("damage_arrow", true);
+        victim.getMeta().set("damage_arrow_damager", damager);
+        victim.getMeta().set("damage_arrow_count", 0);
     }
     private static double normalize(double rad) {
         rad = rad % (Math.PI * 2);

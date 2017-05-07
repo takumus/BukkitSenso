@@ -279,7 +279,7 @@ public class Deathmatch extends GameBase {
             return;
         }
 
-        victim.showDamageArrow(victim.getLastDamagesWeapon().getHolder().getPlayer().getLocation());
+        victim.showDamageArrow(victim.getLastDamagesWeapon().getHolder());
         victim.blood(100);
     }
 }

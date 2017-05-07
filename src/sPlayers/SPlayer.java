@@ -59,8 +59,14 @@ public class SPlayer {
     public String getNameWithColor() {
         return this.getStringWithColor(this.getName());
     }
+    public String getNameWithColor(boolean bold) {
+        return this.getStringWithColor(false, this.getName());
+    }
     public String getStringWithColor(String string) {
-        return ChatColor.RESET + "" + this.getChatColor().toString() +  ChatColor.BOLD + string + ChatColor.RESET;
+        return this.getStringWithColor(true, string);
+    }
+    public String getStringWithColor(boolean bold, String string) {
+        return ChatColor.RESET + "" + this.getChatColor().toString() + (bold?ChatColor.BOLD:"") + string + ChatColor.RESET;
     }
     public void addSItem(SItem sItem) {
         this.addSItem(sItem, this.sItems.size());
@@ -223,8 +229,8 @@ public class SPlayer {
     public int getDeath() {
         return this.death;
     }
-    public void showDamageArrow(Location target) {
-        DamageArrow.show(this, target);
+    public void showDamageArrow(SPlayer damager) {
+        DamageArrow.show(this, damager);
     }
     public void hideDamageArrow() {
         DamageArrow.hide(this);
