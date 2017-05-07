@@ -24,7 +24,7 @@ import java.util.UUID;
 public class GrenadeController extends SItemController{
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRightClick(PlayerInteractEvent e) {
-        if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !e.getAction().equals(Action.LEFT_CLICK_AIR) && !e.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
         SPlayer sp = SPlayerManager.getSPlayer(e.getPlayer());
         if (sp == null) return;
