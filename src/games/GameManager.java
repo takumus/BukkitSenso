@@ -54,6 +54,7 @@ public class GameManager {
             return;
         }
         currentGame.end();
+        currentPlayers.forEach((sp) -> sp.leaveSTeam());
         currentPlayers.clear();
         HandlerList.unregisterAll(currentGame);
         currentGame = null;
