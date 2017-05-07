@@ -9,6 +9,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 import sItem.SItem;
 import sItem.items.grenade.Grenade;
 import sItem.items.superBow.SuperBow;
@@ -26,6 +27,7 @@ import java.util.Map;
  * Created by takumus on 2017/04/26.
  */
 public class SPlayer {
+    private static Scoreboard emptyScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     private Player player;
     private Map<Class, SItem> sItems;
     private SItem lastDamagesWeapon;
@@ -35,6 +37,9 @@ public class SPlayer {
     private ChatColor chatColor;
     private MaterialData coloredMaterial;
     private STeam sTeam;
+    private int score;
+    private int kill;
+    private int death;
     public SPlayer(Player player) {
         this.player = player;
         this.sItems = new HashMap<>();
@@ -44,6 +49,9 @@ public class SPlayer {
         this.player.setHealth(20D);
         this.metadata = new SMeta();
         this.setDyeColor(DyeColor.LIGHT_BLUE);
+        this.score = 0;
+        this.kill = 0;
+        this.death = 0;
     }
     public Player getPlayer() {
         return this.player;
@@ -182,5 +190,40 @@ public class SPlayer {
                 return;
             }
         }
+    }
+    public void showScoreboard(Scoreboard scoreboard) {
+        this.getPlayer().setScoreboard(scoreboard);
+    }
+    public void hideScoreboard() {
+        this.getPlayer().setScoreboard(emptyScoreboard);
+    }
+    public void setScore(int score) {
+        this.score = score;
+    }
+    public void addScore(int score) {
+        this.score += score;
+    }
+    public int getScore() {
+        return this.score;
+    }
+
+    public void setKill(int kill) {
+        this.kill = kill;
+    }
+    public void addKill(int kill) {
+        this.kill += kill;
+    }
+    public int getKill() {
+        return this.kill;
+    }
+
+    public void setDeath(int death) {
+        this.death = death;
+    }
+    public void addDeath(int death) {
+        this.death += death;
+    }
+    public int getDeath() {
+        return this.death;
     }
 }

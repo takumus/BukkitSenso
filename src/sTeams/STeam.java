@@ -18,12 +18,18 @@ public class STeam {
     private String name;
     private List<SPlayer> members;
     int _selectorId;
+    private int score;
+    private int kill;
+    private int death;
     public STeam(DyeColor color, String name) {
         this.color = color;
         this.chatColor = ColorMap.getChatColor(color);
         this.name = name;
         this.members = new ArrayList<>();
         this._selectorId = 0;
+        this.score = 0;
+        this.kill = 0;
+        this.death = 0;
     }
     public STeam(DyeColor color) {
         this(color, ColorMap.getName(color));
@@ -78,5 +84,34 @@ public class STeam {
         this.members.forEach((sp) -> {
             sp.message(message);
         });
+    }
+    public void setScore(int score) {
+        this.score = score;
+    }
+    public void addScore(int score) {
+        this.score += score;
+    }
+    public int getScore() {
+        return this.score;
+    }
+
+    public void setKill(int kill) {
+        this.kill = kill;
+    }
+    public void addKill(int kill) {
+        this.kill += kill;
+    }
+    public int getKill() {
+        return this.kill;
+    }
+
+    public void setDeath(int death) {
+        this.death = death;
+    }
+    public void addDeath(int death) {
+        this.death += death;
+    }
+    public int getDeath() {
+        return this.death;
     }
 }
