@@ -58,6 +58,7 @@ public class STeam {
                 sp
         );
         TeamSelector.updateTeam();
+        sp.setDyeColor(DyeColor.WHITE);
         return true;
     }
     public void clear() {
