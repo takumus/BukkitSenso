@@ -230,6 +230,7 @@ public class SPlayer {
         return this.death;
     }
     public void showDamageArrow(SPlayer damager) {
+        if (damager.equals(this)) return;
         DamageArrow.show(this, damager);
     }
     public void hideDamageArrow() {
