@@ -17,17 +17,42 @@ import sPlayers.SPlayerManager;
 import utils.DelayedTask;
 import utils.MetadataManager;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Created by takumus on 2017/05/04.
  */
 public class SuperBowController extends SItemController{
+    private List<Entity> arrows;
+    public SuperBowController () {
+        this.arrows = new ArrayList<>();
+    }
+    @Override
+    public void onTick() {
+        Iterator<Entity> ei = this.arrows.iterator();
+        while(ei.hasNext()){
+            Entity e = ei.next();
+            int living = Integer.parseInt(MetadataManager.getMetadata(e, "arrow_living_time"));
+            if (living > 5) {
+                e.remove();
+                ei.remove();
+                continue;
+            }
+            living ++;
+            MetadataManager.setMetadata(e, "arrow_living_time", living + "");
+        }
+    }
     private void shootArrow(SPlayer sp, Vector v) {
         Arrow newArrow = sp.getPlayer().launchProjectile(Arrow.class);
         MetadataManager.setMetadata(newArrow, "super_bow_arrow", "true");
+        MetadataManager.setMetadata(newArrow, "arrow_living_time", "0");
         v.multiply(100);
         newArrow.setVelocity(v);
-
+        newArrow.setGravity(false);
         sp.playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
+        this.arrows.add(newArrow);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
