@@ -31,6 +31,7 @@ public class Deathmatch extends GameBase {
         this.scoreboard = new SScoreboard("Scores");
     }
     private void spawn(SPlayer sp) {
+        sp.getPlayer().setHealth(20D);
         sp.clearInventory();
         sp.setSItemsEnabled(true);
         sp.getPlayer().setWalkSpeed(0.3f);
