@@ -77,9 +77,13 @@ public class Main extends JavaPlugin {
             }else if (commandLabel.equalsIgnoreCase("team")) {
                 TeamSelector.showTeamSelector(sp);
             }else if (commandLabel.equalsIgnoreCase("killmessage")) {
-                sp.setKillMessage(a.at(0));
-                SPlayerDataManager.saveMeta(sp);
-                SPlayerDataManager.save();
+                if (a.at(0).equalsIgnoreCase("set")) {
+                    sp.setKillMessage(a.at(1));
+                    SPlayerDataManager.saveMeta(sp);
+                }else if (a.at(0).equalsIgnoreCase("reset")) {
+                    sp.setKillMessage("");
+                    SPlayerDataManager.saveMeta(sp);
+                }
             }
         }
 
