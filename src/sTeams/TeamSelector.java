@@ -27,19 +27,18 @@ import java.util.*;
  */
 public class TeamSelector implements Listener{
     private static TeamSelector instance;
-    private static Map<DyeColor, STeam> teams;
+    private static Map<DyeColor, STeam> teamsMap;
     private static Inventory teamsInventory = Bukkit.createInventory(null, InventoryType.ENDER_CHEST, "Select your team");
     public static void init(JavaPlugin plugin) {
         instance = new TeamSelector();
         Bukkit.getServer().getPluginManager().registerEvents(instance, plugin);
     }
-    public static void setTeams(Collection<String> teamDyeColorNames) {
+    public static void setTeamsMap(List<STeam> teams) {
         teamsInventory.clear();
-        teams = new HashMap<>();
+        teamsMap = new HashMap<>();
         int id = 0;
-        for (String s : teamDyeColorNames) {
-            DyeColor dc = ColorMap.getDyeColor(s);
-            STeam team = new STeam(dc);
+        for (STeam team : teams) {
+            DyeColor dc = team.getDyeColor();
             team._selectorId = id++;
             NBTTagCompound tag = new NBTTagCompound();
             String teamName = ColorMap.getName(dc);
@@ -49,8 +48,8 @@ public class TeamSelector implements Listener{
             meta.setDisplayName(team.getChatColor() + teamName);
             armour.setItemMeta(meta);
             teamsInventory.addItem(armour);
-            teams.put(dc, team);
-        };
+            teamsMap.put(dc, team);
+        }
     }
     public static void showTeamSelectorToAllPlayers() {
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
@@ -81,7 +80,7 @@ public class TeamSelector implements Listener{
         DyeColor teamColor = ColorMap.getDyeColor(teamColorName);
         if (teamColor == null) return;
 
-        STeam sTeam = teams.get(teamColor);
+        STeam sTeam = teamsMap.get(teamColor);
         if (sTeam == null) return;
 
         // Bukkit.getServer().getPluginManager().callEvent(new STeamEvent(sTeam));
@@ -90,7 +89,7 @@ public class TeamSelector implements Listener{
         this.updateTeam();
     }
     public static void updateTeam() {
-        teams.entrySet().forEach((es) -> {
+        teamsMap.entrySet().forEach((es) -> {
             STeam st = es.getValue();
             ItemStack item = teamsInventory.getItem(st._selectorId);
 
