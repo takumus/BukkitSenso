@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayers.SPlayer;
 import sPlayers.SPlayerManager;
+import sScoreboards.SScoreboard;
 import sTeams.STeam;
 import sTeams.TeamSelector;
 import utils.*;
@@ -23,8 +24,11 @@ import java.util.*;
  */
 public class Deathmatch extends GameBase {
     private Map<String, List<Location>> teamSpawns;
+    private SScoreboard scoreboard;
+    private List<STeam> teams;
     public Deathmatch() {
         super("tdm");
+        this.scoreboard = new SScoreboard("Scores");
     }
     private void spawn(SPlayer sp) {
         sp.clearInventory();
@@ -116,12 +120,24 @@ public class Deathmatch extends GameBase {
         Location location = spawns.get((int)(Math.random() * spawns.size()));
         sp.getPlayer().teleport(location);
     }
+    private void updateScore() {
+        this.teams.forEach((team) -> {
+            if (team.getMembers().size() > 0) {
+                this.scoreboard.setScore(team.getNameWithColor(), team.getScore());
+            }
+        });
+    }
+    //----------------------------------------------------------------------//
+    // ゲームに参加
+    //----------------------------------------------------------------------//
     @Override
     public void selectTeam(SPlayer sp, STeam sTeam) {
         sTeam.addSPlayer(sp);
         sp.setDyeColor(sTeam.getDyeColor());
         GameManager.addPlayer(sp);
+        sp.showScoreboard(this.scoreboard.getScoreboard());
         this.spawn(sp);
+        this.updateScore();
     }
 
     @Override
@@ -136,9 +152,15 @@ public class Deathmatch extends GameBase {
             }
             spawns.add(spawn.getLocation());
         });
-
-        TeamSelector.setTeams(this.teamSpawns.keySet());
-
+        this.teams = new ArrayList<>();
+        this.teamSpawns.keySet().forEach((teamName) -> {
+            STeam team = new STeam(ColorMap.getDyeColor(teamName));
+            team.setScore(0);
+            team.setDeath(0);
+            team.setKill(0);
+            this.teams.add(team);
+        });
+        TeamSelector.setTeamsMap(this.teams);
         SPlayerManager.getAllSPlayer().forEach((sp) -> {
             TeamSelector.showTeamSelector(sp);
         });
@@ -196,7 +218,6 @@ public class Deathmatch extends GameBase {
                     0, 5
             );
             this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
-
         }
 
         victim.getMeta().set(MetaKey.STATUS, Status.KILL_CAMERA);
@@ -214,6 +235,18 @@ public class Deathmatch extends GameBase {
 
         victim.playSound(Sound.ENTITY_ENDERMEN_DEATH, 1, 1, false);
         killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
+
+        //スコア
+        victim.addDeath(1);
+        victim.getSTeam().addDeath(1);
+
+        killer.addKill(1);
+        killer.getSTeam().addKill(1);
+        int score = 100;
+        killer.addScore(score);
+        killer.getSTeam().addScore(score);
+
+        this.updateScore();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -243,6 +276,7 @@ public class Deathmatch extends GameBase {
             return;
         }
 
+        DamageArrow.show(victim, victim.getLastDamagesWeapon().getHolder().getPlayer().getLocation());
         victim.blood(100);
     }
 }
