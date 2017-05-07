@@ -34,9 +34,9 @@ public class Main extends JavaPlugin {
         SPlayerManager.init(this);
         GameManager.init(this);
 
-        SItemManager.addSItem(new GrenadeController());
-        SItemManager.addSItem(new SuperBowController());
-        SItemManager.addSItem(new MasterSwordController());
+        SItemManager.addSItemController(new GrenadeController());
+        SItemManager.addSItemController(new SuperBowController());
+        SItemManager.addSItemController(new MasterSwordController());
 
         GameManager.addGame(new Deathmatch());
     }

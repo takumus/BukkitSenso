@@ -41,6 +41,7 @@ public class GrenadeController extends SItemController{
 
         Snowball ball = sp.getPlayer().launchProjectile(Snowball.class);
         MetadataManager.setMetadata(ball, "snowball_grenade", "true");
+        item.reload(40);
 
         sp.playSound(Sound.ENTITY_FIREWORK_LAUNCH, 1f, 1f, true);
 

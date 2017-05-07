@@ -7,4 +7,7 @@ import org.bukkit.event.Listener;
  */
 abstract public class SItemController implements Listener{
     abstract public void onTick();
+    void _onTick() {
+        this.onTick();
+    }
 }
