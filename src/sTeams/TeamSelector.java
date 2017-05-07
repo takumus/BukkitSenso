@@ -85,8 +85,6 @@ public class TeamSelector implements Listener{
 
         // Bukkit.getServer().getPluginManager().callEvent(new STeamEvent(sTeam));
         GameManager.selectTeam(sp, sTeam);
-
-        this.updateTeam();
     }
     public static void updateTeam() {
         teamsMap.entrySet().forEach((es) -> {

@@ -45,6 +45,7 @@ public class STeam {
                 ChatColor.BOLD + sp.getName() + ChatColor.RESET + " joined to " + this.getNameWithColor(),
                 sp
         );
+        TeamSelector.updateTeam();
         return true;
     }
     public boolean removeSPlayer(SPlayer sp) {
@@ -56,6 +57,7 @@ public class STeam {
                 ChatColor.BOLD + sp.getName() + ChatColor.RESET + " left from " + this.getNameWithColor(),
                 sp
         );
+        TeamSelector.updateTeam();
         return true;
     }
     public void clear() {
