@@ -96,7 +96,7 @@ public class SuperBowController extends SItemController{
         SPlayer victim = SPlayerManager.getSPlayer(e.getEntity());
         if (victim == null) return;
 
-        victim.damage(damager.getSItems().get(SuperBow.class), 10D);
+        victim.damage(damager.getSItems().get(SuperBow.class), SuperBow.DAMAGE);
 
         DelayedTask.task(() -> {
             damager.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);

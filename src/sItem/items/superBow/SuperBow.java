@@ -10,7 +10,7 @@ import sItem.SItem;
  * Created by takumus on 2017/04/28.
  */
 public class SuperBow extends SItem{
-    private static double DAMAGE = 100D;
+    public static double DAMAGE = 12D;
     public SuperBow() {
         super("Super Bow", new ItemStack(Material.BOW), "super_bow");
     }

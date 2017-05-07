@@ -5,6 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import sItem.items.grenade.GrenadeController;
+import sItem.items.masterSword.MasterSwordController;
+import sItem.items.superBow.SuperBowController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,10 @@ public class SItemManager {
             });
         }, 0L, 1L);
 
+        //コントローラー初期化
+        addSItemController(new GrenadeController());
+        addSItemController(new SuperBowController());
+        addSItemController(new MasterSwordController());
     }
     public static void addSItemController(SItemController item) {
         Bukkit.getServer().getPluginManager().registerEvents(item, plugin);

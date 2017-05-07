@@ -33,12 +33,6 @@ public class Main extends JavaPlugin {
         SItemManager.init(this);
         SPlayerManager.init(this);
         GameManager.init(this);
-
-        SItemManager.addSItemController(new GrenadeController());
-        SItemManager.addSItemController(new SuperBowController());
-        SItemManager.addSItemController(new MasterSwordController());
-
-        GameManager.addGame(new Deathmatch());
     }
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args){

@@ -26,6 +26,9 @@ public class GameManager {
         Bukkit.getServer().getScheduler().runTaskTimer(plugin, () -> {
             if (isPlaying()) currentGame.onTick();
         }, 0L, 1L);
+
+        //ゲーム初期化
+        addGame(new Deathmatch());
     }
     public static boolean begin(String type, String stageName) {
         if (isPlaying()) {
