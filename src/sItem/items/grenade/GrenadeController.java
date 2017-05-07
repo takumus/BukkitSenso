@@ -22,6 +22,10 @@ import java.util.UUID;
  * Created by takumus on 2017/05/04.
  */
 public class GrenadeController extends SItemController{
+    @Override
+    public void onTick() {
+
+    }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRightClick(PlayerInteractEvent e) {
         if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !e.getAction().equals(Action.LEFT_CLICK_AIR) && !e.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;

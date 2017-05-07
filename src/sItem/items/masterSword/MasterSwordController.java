@@ -12,6 +12,10 @@ import sPlayers.SPlayerManager;
  * Created by takumus on 2017/05/04.
  */
 public class MasterSwordController extends SItemController{
+    @Override
+    public void onTick() {
+
+    }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent e) {
 
