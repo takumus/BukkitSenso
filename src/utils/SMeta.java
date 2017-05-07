@@ -36,6 +36,9 @@ public class SMeta {
     public SPlayer getSPlayer(String key) {
         return (SPlayer) this.metadata.get(key);
     }
+    public Object getObject(String key) {
+        return this.metadata.get(key);
+    }
     public void set(String key, String value) {
         this.metadata.put(key, value);
     }

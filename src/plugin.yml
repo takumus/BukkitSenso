@@ -13,3 +13,5 @@ commands:
     description: senso
   team:
     description: senso
+  killmessage:
+    description: senso

@@ -10,6 +10,7 @@ import sItem.items.grenade.GrenadeController;
 import sItem.items.masterSword.MasterSwordController;
 import sItem.items.superBow.SuperBowController;
 import sPlayers.SPlayer;
+import sPlayers.SPlayerDataManager;
 import sPlayers.SPlayerManager;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin {
         DamageArrow.init(this);
         DelayedTask.init(this);
         StageManager.init(this);
+        SPlayerDataManager.init(this);
         TeamSelector.init(this);
         MetadataManager.init(this);
         StageEditorManager.init(this);
@@ -74,6 +76,10 @@ public class Main extends JavaPlugin {
                 }
             }else if (commandLabel.equalsIgnoreCase("team")) {
                 TeamSelector.showTeamSelector(sp);
+            }else if (commandLabel.equalsIgnoreCase("killmessage")) {
+                sp.setKillMessage(a.at(0));
+                SPlayerDataManager.saveMeta(sp);
+                SPlayerDataManager.save();
             }
         }
 

@@ -49,6 +49,10 @@ public class SPlayer {
         this.score = 0;
         this.kill = 0;
         this.death = 0;
+        SPlayerDataManager.loadMeta(this);
+    }
+    public String getUUID() {
+        return this.getPlayer().getUniqueId().toString();
     }
     public Player getPlayer() {
         return this.player;
@@ -235,5 +239,17 @@ public class SPlayer {
     }
     public void hideDamageArrow() {
         DamageArrow.hide(this);
+    }
+    public void setKillMessage(String message) {
+        this.message("Your kill message is '" + message + "'");
+        this.getPermanentMeta().put("killmessage", message);
+    }
+    public String getKillMessage() {
+        String message = this.getPermanentMeta().get("killmessage");
+        if (message == null) return "Respawning...";
+        return message;
+    }
+    public Map<String, String> getPermanentMeta() {
+        return (Map<String, String>)this.getMeta().getObject("permanent");
     }
 }
