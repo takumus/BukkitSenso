@@ -241,6 +241,9 @@ public class SPlayer {
         DamageArrow.hide(this);
     }
     public void setKillMessage(String message) {
+        if (message.equals("")) {
+            message = "Respawning...";
+        }
         this.message("Your kill message is '" + message + "'");
         this.getPermanentMeta().put("killmessage", message);
     }
