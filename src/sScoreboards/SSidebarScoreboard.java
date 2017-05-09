@@ -8,10 +8,10 @@ import org.bukkit.scoreboard.Scoreboard;
 /**
  * Created by takumus on 2017/05/07.
  */
-public class SScoreboard {
+public class SSidebarScoreboard {
     private Scoreboard board;
     private Objective objective;
-    public SScoreboard(String name) {
+    public SSidebarScoreboard(String name) {
         this.board = Bukkit.getScoreboardManager().getNewScoreboard();
 
         this.objective = this.board.registerNewObjective("hello", "dummy");

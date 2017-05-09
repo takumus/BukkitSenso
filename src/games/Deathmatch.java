@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayers.SPlayer;
 import sPlayers.SPlayerManager;
-import sScoreboards.SScoreboard;
+import sScoreboards.SSidebarScoreboard;
 import sTeams.STeam;
 import sTeams.TeamSelector;
 import utils.*;
@@ -24,11 +24,11 @@ import java.util.*;
  */
 public class Deathmatch extends GameBase {
     private Map<String, List<Location>> teamSpawns;
-    private SScoreboard scoreboard;
+    private SSidebarScoreboard scoreboard;
     private List<STeam> teams;
     public Deathmatch() {
         super("tdm");
-        this.scoreboard = new SScoreboard("Scores");
+        this.scoreboard = new SSidebarScoreboard("Scores");
     }
     private void spawn(SPlayer sp) {
         sp.getPlayer().setHealth(20D);
