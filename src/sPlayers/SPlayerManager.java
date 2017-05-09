@@ -42,6 +42,12 @@ public class SPlayerManager implements Listener{
             if (!sp.equals(withoutMe)) sp.message(message);
         });
     }
+    public static void sendTitle(String main, String sub, int time) {
+        sendTitle(main, sub, time, 0, 0);
+    }
+    public static void sendTitle(String main, String sub, int time, int fadeInTime, int fadeOutTime) {
+        instance.sPlayers.values().forEach((sp) -> sp.sendTitle(main, sub, time, fadeInTime, fadeOutTime));
+    }
     //----------
     //
     //----------

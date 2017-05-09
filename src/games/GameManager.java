@@ -20,7 +20,7 @@ public class GameManager {
     private static JavaPlugin plugin;
     private static Map<String, GameBase> games = new HashMap<>();
     private static GameBase currentGame;
-    private static List<SPlayer> currentPlayers = new ArrayList<>();
+    private static List<SPlayer> inGamePlayers = new ArrayList<>();
     public static void init(JavaPlugin plugin) {
         GameManager.plugin = plugin;
         Bukkit.getServer().getScheduler().runTaskTimer(plugin, () -> {
@@ -57,8 +57,11 @@ public class GameManager {
             return;
         }
         currentGame.stop();
-        currentPlayers.forEach((sp) -> sp.leaveSTeam());
-        currentPlayers.clear();
+        inGamePlayers.forEach((sp) -> {
+            sp.leaveSTeam();
+            sp.getMeta().set("game_manager_is_playing", false);
+        });
+        inGamePlayers.clear();
         HandlerList.unregisterAll(currentGame);
         currentGame = null;
     }
@@ -73,17 +76,24 @@ public class GameManager {
         games.put(game.getType(), game);
     }
     public static void addPlayer(SPlayer sp) {
-        if (currentPlayers.contains(sp)) return;
-        currentPlayers.add(sp);
+        if (inGamePlayers.contains(sp)) return;
+        sp.getMeta().set("game_manager_is_playing", true);
+        inGamePlayers.add(sp);
     }
     public static void removePlayer(SPlayer sp) {
-        if (!currentPlayers.contains(sp)) return;
-        currentPlayers.remove(sp);
+        if (!inGamePlayers.contains(sp)) return;
+        sp.getMeta().set("game_manager_is_playing", false);
+        inGamePlayers.remove(sp);
     }
-    public static void clearCurrentPlayers() {
-        currentPlayers.clear();
+    public static List<SPlayer> getInGamePlayers() {
+        return inGamePlayers;
     }
-    public static List<SPlayer> getCurrentPlayers() {
-        return currentPlayers;
+    public static List<SPlayer> getNotInGamePlayers() {
+        List<SPlayer> list = new ArrayList<>();
+        inGamePlayers.forEach((sp) -> {
+            if (sp.getMeta().getBoolean("game_manager_is_playing")) return;
+            list.add(sp);
+        });
+        return list;
     }
 }

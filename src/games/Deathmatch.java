@@ -132,7 +132,10 @@ public class Deathmatch extends GameBase {
     //----------------------------------------------------------------------//
     private void _start() {
         this.setStatus("playing");
-        GameManager.getCurrentPlayers().forEach(this::spawn);
+        GameManager.getInGamePlayers().forEach((sp) -> {
+            this.spawn(sp);
+            sp.sendTitle("Fight...!", "", 20);
+        });
         STimer.start(60, this::stop);
     }
 
@@ -173,15 +176,30 @@ public class Deathmatch extends GameBase {
         });
         TeamSelector.setTeamsMap(this.teams);
         SPlayerManager.getAllSPlayer().forEach(TeamSelector::showTeamSelector);
-        //チーム選択の時間
-        STimer.start(20, this::_start);
+
+        //チーム選択
+        STimer.start(20, this::_start, () -> {
+            SPlayerManager.getAllSPlayer().forEach((sp) -> {
+                String teamMessage;
+                if (sp.getSTeam() == null) {
+                    teamMessage = "Chat " + ChatColor.DARK_PURPLE + "/team " + ChatColor.RESET + "to select your team";
+                }else {
+                    teamMessage = "Your team is " + sp.getSTeam().getNameWithColor();
+                }
+                sp.sendTitle(
+                       "The game will start in " + ChatColor.RED + STimer.getRemaining() + ChatColor.RESET + " seconds",
+                       teamMessage,
+                       35, 0, 10
+                );
+            });
+        });
         this.setStatus("selecting_team");
         return true;
     }
 
     @Override
     public boolean stop() {
-        GameManager.getCurrentPlayers().forEach((sp) -> {
+        GameManager.getInGamePlayers().forEach((sp) -> {
             sp.setSItemsEnabled(false);
             sp.clearInventory();
         });
@@ -193,7 +211,7 @@ public class Deathmatch extends GameBase {
     @Override
     public void onTick() {
         if (!this.getStatus().equals("playing")) return;
-        GameManager.getCurrentPlayers().forEach((sp) -> {
+        GameManager.getInGamePlayers().forEach((sp) -> {
             sp.getPlayer().setSneaking(true);
             sp.getPlayer().getWorld().setTime(0);
             sp.getPlayer().getWorld().setStorm(false);

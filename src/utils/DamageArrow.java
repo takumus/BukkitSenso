@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayers.SPlayer;
-import sPlayers.SPlayerManager;
 
 /**
  * Created by takumus on 2017/05/07.
@@ -17,7 +16,7 @@ public class DamageArrow {
     private static double offset = unit / 2;
     public static void init(JavaPlugin plugin) {
         Bukkit.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            GameManager.getCurrentPlayers().forEach((victim) -> {
+            GameManager.getInGamePlayers().forEach((victim) -> {
                 if (!victim.getMeta().getBoolean("damage_arrow")) return;
                 int count = victim.getMeta().getInt("damage_arrow_count");
                 SPlayer damager = victim.getMeta().getSPlayer("damage_arrow_damager");
