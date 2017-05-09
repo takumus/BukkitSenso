@@ -132,11 +132,18 @@ public class Deathmatch extends GameBase {
     //----------------------------------------------------------------------//
     private void _start() {
         this.setStatus("playing");
-        GameManager.getInGamePlayers().forEach((sp) -> {
-            this.spawn(sp);
-            sp.sendTitle("Fight...!", "", 20);
+        GameManager.getInGamePlayers().forEach(this::spawn);
+        SPlayerManager.sendTitle("Fight...!", "", 20);
+        STimer.start(60 * 10, GameManager::stop, () -> {
+            System.out.println(STimer.getCurrentTime());
+            GameManager.getNotInGamePlayers().forEach((sp) -> {
+                sp.sendTitle(
+                        "The game is in progress",
+                        "Chat " + ChatColor.LIGHT_PURPLE + "/team " + ChatColor.RESET + "to select your team",
+                        35, 0, 10
+                );
+            });
         });
-        STimer.start(60, this::stop);
     }
 
     //----------------------------------------------------------------------//
@@ -182,14 +189,14 @@ public class Deathmatch extends GameBase {
             SPlayerManager.getAllSPlayer().forEach((sp) -> {
                 String teamMessage;
                 if (sp.getSTeam() == null) {
-                    teamMessage = "Chat " + ChatColor.DARK_PURPLE + "/team " + ChatColor.RESET + "to select your team";
+                    teamMessage = "Chat " + ChatColor.LIGHT_PURPLE + "/team " + ChatColor.RESET + "to join";
                 }else {
                     teamMessage = "Your team is " + sp.getSTeam().getNameWithColor();
                 }
                 sp.sendTitle(
-                       "The game will start in " + ChatColor.RED + STimer.getRemaining() + ChatColor.RESET + " seconds",
-                       teamMessage,
-                       35, 0, 10
+                        teamMessage,
+                        "The game will start in " + ChatColor.RED + STimer.getRemaining() + ChatColor.RESET + " seconds",
+                        35, 0, 10
                 );
             });
         });

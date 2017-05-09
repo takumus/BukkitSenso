@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import sPlayers.SPlayer;
+import sPlayers.SPlayerManager;
 import stages.Stage;
 import stages.StageManager;
 import sTeams.STeam;
@@ -90,7 +91,7 @@ public class GameManager {
     }
     public static List<SPlayer> getNotInGamePlayers() {
         List<SPlayer> list = new ArrayList<>();
-        inGamePlayers.forEach((sp) -> {
+        SPlayerManager.getAllSPlayer().forEach((sp) -> {
             if (sp.getMeta().getBoolean("game_manager_is_playing")) return;
             list.add(sp);
         });

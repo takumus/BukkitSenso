@@ -31,10 +31,12 @@ public class STimer {
         }
     }
     public static void start(int time, Runnable complete) {
+        if (time == 0) return;
         start(time, complete, null);
     }
     public static void start(int time, Runnable complete, Runnable tick) {
         if (counting) return;
+        System.out.println(time);
         STimer.time = time;
         STimer.currentTime = 0;
         onComplete = complete;
@@ -43,12 +45,13 @@ public class STimer {
     }
     public static void stop() {
         if (!counting) return;
+        Runnable _onComplete = onComplete;
         counting = false;
-        onComplete.run();
         onComplete = null;
         onTick = null;
         currentTime = 0;
         time = 0;
+        _onComplete.run();
     }
     public static int getRemaining() {
         return time - currentTime;
