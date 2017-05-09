@@ -14,6 +14,7 @@ import sPlayers.SPlayerManager;
 import sScoreboards.SSidebarScoreboard;
 import sTeams.STeam;
 import sTeams.TeamSelector;
+import sTimers.STimer;
 import utils.*;
 import stages.Stage;
 
@@ -55,15 +56,13 @@ public class Deathmatch extends GameBase {
         );
         SMeta meta = sp.getMeta();
         meta.set(MetaKey.KILL_CAMERA_COUNT, 0);
-        meta.set(MetaKey.STATUS, Status.PLAY);
+        meta.set(MetaKey.STATUS, PlayerStatus.PLAY);
         meta.set(MetaKey.NO_DAMAGE, false);
         meta.set(MetaKey.KILLER, null);
         meta.set(MetaKey.KILLED_LOCATION, null);
 
         this.teleportToSpawn(sp);
-        DelayedTask.task(() -> {
-            sp.getPlayer().setGameMode(GameMode.SURVIVAL);
-        }, 1L);
+        DelayedTask.task(() -> sp.getPlayer().setGameMode(GameMode.SURVIVAL), 1L);
     }
     private void killCamera(SPlayer sp) {
         SMeta meta = sp.getMeta();
@@ -91,7 +90,7 @@ public class Deathmatch extends GameBase {
         }
 
         //他殺の場合キルカメモード
-        Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(Status.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
+        Location targetLocation = killer.getMeta().getString(MetaKey.STATUS).equals(PlayerStatus.PLAY) ? killer.getPlayer().getLocation() : killer.getMeta().getLocation(MetaKey.KILLED_LOCATION);
         sp.lookAt(targetLocation);
         if (count < 40) {
             if (count % 10 == 0) Effects.strikeLightning(meta.getLocation(MetaKey.KILLED_LOCATION));
@@ -129,6 +128,15 @@ public class Deathmatch extends GameBase {
         });
     }
     //----------------------------------------------------------------------//
+    // ゲーム開始（試合開始）
+    //----------------------------------------------------------------------//
+    private void _start() {
+        this.setStatus("playing");
+        GameManager.getCurrentPlayers().forEach(this::spawn);
+        STimer.start(60, this::stop);
+    }
+
+    //----------------------------------------------------------------------//
     // ゲームに参加
     //----------------------------------------------------------------------//
     @Override
@@ -137,12 +145,14 @@ public class Deathmatch extends GameBase {
         sp.setDyeColor(sTeam.getDyeColor());
         GameManager.addPlayer(sp);
         sp.showScoreboard(this.scoreboard.getScoreboard());
-        this.spawn(sp);
+        if (this.getStatus().equals("playing")) this.spawn(sp);
         this.updateScore();
     }
-
+    //----------------------------------------------------------------------//
+    // ゲーム開始（チーム選択開始）
+    //----------------------------------------------------------------------//
     @Override
-    public boolean begin(Stage stage) {
+    public boolean start(Stage stage) {
         this.teamSpawns = new HashMap<>();
         stage.getSpawns().forEach((spawn) -> {
             String name = spawn.getMeta("team");
@@ -162,23 +172,27 @@ public class Deathmatch extends GameBase {
             this.teams.add(team);
         });
         TeamSelector.setTeamsMap(this.teams);
-        SPlayerManager.getAllSPlayer().forEach((sp) -> {
-            TeamSelector.showTeamSelector(sp);
-        });
+        SPlayerManager.getAllSPlayer().forEach(TeamSelector::showTeamSelector);
+        //チーム選択の時間
+        STimer.start(20, this::_start);
+        this.setStatus("selecting_team");
         return true;
     }
 
     @Override
-    public boolean end() {
+    public boolean stop() {
         GameManager.getCurrentPlayers().forEach((sp) -> {
             sp.setSItemsEnabled(false);
             sp.clearInventory();
         });
+        STimer.stop();
+        this.setStatus("stop");
         return false;
     }
 
     @Override
     public void onTick() {
+        if (!this.getStatus().equals("playing")) return;
         GameManager.getCurrentPlayers().forEach((sp) -> {
             sp.getPlayer().setSneaking(true);
             sp.getPlayer().getWorld().setTime(0);
@@ -186,7 +200,7 @@ public class Deathmatch extends GameBase {
             sp.getPlayer().getWorld().setThundering(false);
             sp.getPlayer().setFoodLevel(30);
             SMeta meta = sp.getMeta();
-            if (meta.getString(MetaKey.STATUS).equals(Status.KILL_CAMERA)) {
+            if (meta.getString(MetaKey.STATUS).equals(PlayerStatus.KILL_CAMERA)) {
                 this.killCamera(sp);
             }
         });
@@ -194,6 +208,7 @@ public class Deathmatch extends GameBase {
 
     @Override
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
+        if (!this.getStatus().equals("playing")) return;
         SPlayer killer = weapon.getHolder();
         boolean suicide = false;
         if (victim.equals(killer)) {
@@ -225,7 +240,7 @@ public class Deathmatch extends GameBase {
         victim.hideDamageArrow();
         killer.hideDamageArrow();
 
-        victim.getMeta().set(MetaKey.STATUS, Status.KILL_CAMERA);
+        victim.getMeta().set(MetaKey.STATUS, PlayerStatus.KILL_CAMERA);
         victim.getMeta().set(MetaKey.KILL_CAMERA_COUNT, 0);
         victim.getMeta().set(MetaKey.NO_DAMAGE, true);
         victim.getMeta().set(MetaKey.KILLED_LOCATION, victim.getPlayer().getLocation().clone());
@@ -261,6 +276,7 @@ public class Deathmatch extends GameBase {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
+        if (!this.getStatus().equals("playing")) return;
         if (!(event.getEntity() instanceof Player)) return;
         if (event.isCancelled()) return;
 
@@ -291,15 +307,15 @@ public class Deathmatch extends GameBase {
     }
 }
 class MetaKey {
-    public static String NO_DAMAGE = "no_damage";
-    public static String STATUS = "status";
-    public static String KILL_CAMERA_COUNT = "kill_camera_count";
-    public static String KILLED_LOCATION = "killed_location";
-    public static String KILLED_LOCATION_FOR_KILL_CAMERA = "killed_location_for_kill_camera";
-    public static String KILLER = "killer";
+    static String NO_DAMAGE = "no_damage";
+    static String STATUS = "status";
+    static String KILL_CAMERA_COUNT = "kill_camera_count";
+    static String KILLED_LOCATION = "killed_location";
+    static String KILLED_LOCATION_FOR_KILL_CAMERA = "killed_location_for_kill_camera";
+    static String KILLER = "killer";
 }
-class Status {
-    public static String NONE = "none";
-    public static String KILL_CAMERA = "kill_camera";
-    public static String PLAY = "playing";
+class PlayerStatus {
+    static String NONE = "none";
+    static String KILL_CAMERA = "kill_camera";
+    static String PLAY = "playing";
 }

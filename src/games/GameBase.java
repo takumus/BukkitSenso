@@ -19,11 +19,12 @@ import sTeams.STeam;
  */
 abstract public class GameBase implements Listener{
     private String type;
+    private String status = "";
     public GameBase(String type) {
         this.type = type;
     }
-    abstract public boolean begin(Stage stage);
-    abstract public boolean end();
+    abstract public boolean start(Stage stage);
+    abstract public boolean stop();
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     abstract public void selectTeam(SPlayer sp, STeam sTeam);
@@ -56,5 +57,11 @@ abstract public class GameBase implements Listener{
 
     public String getType() {
         return this.type;
+    }
+    public String getStatus(){
+        return this.status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

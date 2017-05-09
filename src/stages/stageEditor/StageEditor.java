@@ -35,8 +35,8 @@ abstract public class StageEditor implements Listener {
     private Stage stage;
     private List<LivingEntity> spawns;
 
-    abstract public void begin(SPlayer editor, Stage stage);
-    abstract public void end();
+    abstract public void start(SPlayer editor, Stage stage);
+    abstract public void stop();
     abstract public void save();
     abstract protected void receiveValue(String value);
     abstract protected boolean addingSpawn(Location location, NBTTagCompound tag);
@@ -50,14 +50,14 @@ abstract public class StageEditor implements Listener {
         return this.spawns;
     }
 
-    void _begin(SPlayer editor, Stage stage) {
+    void _start(SPlayer editor, Stage stage) {
         this.spawns = new ArrayList<>();
         this.editor = editor;
         this.stage = stage;
-        this.begin(editor, stage);
+        this.start(editor, stage);
     }
-    void _end() {
-        this.end();
+    void _stop() {
+        this.stop();
         this.editor.getPlayer().getInventory().clear();
         this.editor = null;
         this.stage = null;

@@ -26,9 +26,9 @@ public class StageEditorManager {
         editors = new HashMap<>();
         editors.put("tdm", new TDMStageEditor());
     }
-    public static void begin(String stageName, String type, SPlayer editor) {
+    public static void start(String stageName, String type, SPlayer editor) {
         if (isEditing()) {
-            editor.message(ChatColor.RED + "Cannot begin editing while editing other stage");
+            editor.message(ChatColor.RED + "Cannot start editing while editing other stage");
             return;
         }
         StageEditor stageEditor = editors.get(type.toLowerCase());
@@ -48,7 +48,7 @@ public class StageEditorManager {
         editor.message(ChatColor.YELLOW + "Stage type is '" + type + "'");
         editorSPlayer = editor;
         currentEditor = stageEditor;
-        currentEditor._begin(editorSPlayer, stage);
+        currentEditor._start(editorSPlayer, stage);
         Bukkit.getServer().getPluginManager().registerEvents(currentEditor, plugin);
     }
     public static void save() {
@@ -56,11 +56,11 @@ public class StageEditorManager {
         currentEditor._save();
         editorSPlayer.message(ChatColor.YELLOW + "Stage saved");
     }
-    public static void end() {
+    public static void stop() {
         if (!isEditing()) return;
         save();
         HandlerList.unregisterAll(currentEditor);
-        currentEditor._end();
+        currentEditor._stop();
         currentEditor = null;
     }
     public static boolean isEditing() {

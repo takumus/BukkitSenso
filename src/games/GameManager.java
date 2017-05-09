@@ -30,7 +30,7 @@ public class GameManager {
         //ゲーム初期化
         addGame(new Deathmatch());
     }
-    public static boolean begin(String type, String stageName) {
+    public static boolean start(String type, String stageName) {
         if (isPlaying()) {
             return false;
         }
@@ -45,18 +45,18 @@ public class GameManager {
             return false;
         }
 
-        if (!game.begin(stage)) {
+        if (!game.start(stage)) {
             return false;
         }
         currentGame = game;
         Bukkit.getServer().getPluginManager().registerEvents(game, plugin);
         return true;
     }
-    public static void end() {
+    public static void stop() {
         if (!isPlaying()) {
             return;
         }
-        currentGame.end();
+        currentGame.stop();
         currentPlayers.forEach((sp) -> sp.leaveSTeam());
         currentPlayers.clear();
         HandlerList.unregisterAll(currentGame);

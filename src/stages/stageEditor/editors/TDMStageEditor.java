@@ -82,7 +82,7 @@ public class TDMStageEditor extends StageEditor {
     }
 
     @Override
-    public void begin(SPlayer editor, Stage stage) {
+    public void start(SPlayer editor, Stage stage) {
         this.initWools(editor);
 
         editor.message(ChatColor.YELLOW.toString() + stage.getSpawns().size() + ChatColor.RESET + " spawns loaded");
@@ -105,7 +105,7 @@ public class TDMStageEditor extends StageEditor {
     }
 
     @Override
-    public void end() {
+    public void stop() {
         this.getSpawns().forEach((spawn) -> spawn.remove());
     }
 
