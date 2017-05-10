@@ -36,7 +36,6 @@ public class STimer {
     }
     public static void start(int time, Runnable complete, Runnable tick) {
         if (counting) return;
-        System.out.println(time);
         STimer.time = time;
         STimer.currentTime = 0;
         onComplete = complete;

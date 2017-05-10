@@ -135,7 +135,6 @@ public class Deathmatch extends GameBase {
         GameManager.getInGamePlayers().forEach(this::spawn);
         SPlayerManager.sendTitle("Fight...!", "", 20);
         STimer.start(60 * 10, GameManager::stop, () -> {
-            System.out.println(STimer.getCurrentTime());
             GameManager.getNotInGamePlayers().forEach((sp) -> {
                 sp.sendTitle(
                         "The game is in progress",
