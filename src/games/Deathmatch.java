@@ -11,7 +11,6 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayers.SPlayer;
 import sPlayers.SPlayerManager;
-import sScoreboards.SPlayerListScoreboard;
 import sScoreboards.SScoreboard;
 import sScoreboards.SSidebarScoreboard;
 import sTeams.STeam;
