@@ -11,6 +11,8 @@ import org.bukkit.util.Vector;
 import sItem.SItem;
 import sPlayers.SPlayer;
 import sPlayers.SPlayerManager;
+import sScoreboards.SPlayerListScoreboard;
+import sScoreboards.SScoreboard;
 import sScoreboards.SSidebarScoreboard;
 import sTeams.STeam;
 import sTeams.TeamSelector;
@@ -25,11 +27,13 @@ import java.util.*;
  */
 public class Deathmatch extends GameBase {
     private Map<String, List<Location>> teamSpawns;
-    private SSidebarScoreboard scoreboard;
+    private SSidebarScoreboard scoreSidebar;
+    //private SPlayerListScoreboard scorePlayerList;
     private List<STeam> teams;
     public Deathmatch() {
         super("tdm");
-        this.scoreboard = new SSidebarScoreboard("Scores");
+        this.scoreSidebar = new SSidebarScoreboard("Scores");
+        //this.scorePlayerList = new SPlayerListScoreboard("Scores");
     }
     private void spawn(SPlayer sp) {
         sp.getPlayer().setHealth(20D);
@@ -60,6 +64,8 @@ public class Deathmatch extends GameBase {
         meta.set(MetaKey.NO_DAMAGE, false);
         meta.set(MetaKey.KILLER, null);
         meta.set(MetaKey.KILLED_LOCATION, null);
+        meta.set(MetaKey.MULTI_KILL_COUNT, 0);
+        meta.set(MetaKey.MULTI_KILL_TICK, 0);
 
         this.teleportToSpawn(sp);
         DelayedTask.task(() -> sp.getPlayer().setGameMode(GameMode.SURVIVAL), 1L);
@@ -123,8 +129,14 @@ public class Deathmatch extends GameBase {
     private void updateScore() {
         this.teams.forEach((team) -> {
             if (team.getMembers().size() > 0) {
-                this.scoreboard.setScore(team.getNameWithColor(), team.getScore());
+                this.scoreSidebar.setScore(team.getNameWithColor(), team.getScore());
             }
+        });
+        GameManager.getInGamePlayers().forEach((sp) -> {
+            //this.scorePlayerList.setScore(sp, sp.getScore());
+            sp.getPlayer().setPlayerListName(
+                    sp.getNameWithColor() + " " + ChatColor.AQUA + "K:" + sp.getKill() + ChatColor.GRAY + "/" + ChatColor.RED + "D:" + sp.getDeath() + " " + ChatColor.YELLOW + "S:" + sp.getScore()
+            );
         });
     }
     //----------------------------------------------------------------------//
@@ -153,7 +165,7 @@ public class Deathmatch extends GameBase {
         sTeam.addSPlayer(sp);
         sp.setDyeColor(sTeam.getDyeColor());
         GameManager.addPlayer(sp);
-        sp.showScoreboard(this.scoreboard.getScoreboard());
+        sp.showScoreboard(SScoreboard.getScoreboard());
         if (this.getStatus().equals("playing")) this.spawn(sp);
         this.updateScore();
     }
@@ -235,33 +247,8 @@ public class Deathmatch extends GameBase {
     public void onSPlayerDeath(SPlayer victim, SItem weapon) {
         if (!this.getStatus().equals("playing")) return;
         SPlayer killer = weapon.getHolder();
-        boolean suicide = false;
-        if (victim.equals(killer)) {
-            suicide = true;
-            // 自殺
-            victim.sendTitle(
-                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed " + ChatColor.GRAY + "yourself...!",
-                    ChatColor.RED + weapon.getName(),
-                    20 * 3,
-                    0, 20
-            );
-            this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + ChatColor.WHITE + "oneself" + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
-        }else {
-            // 他殺
-            victim.sendTitle(
-                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed by " + killer.getNameWithColor(),
-                    ChatColor.RED + weapon.getName(),
-                    20 * 3,
-                    0, 20
-            );
-            killer.sendTitle(
-                    "",
-                    killer.getStringWithColor("You") + " " + ChatColor.WHITE + "Killed " + victim.getNameWithColor(),
-                    20,
-                    0, 5
-            );
-            this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ")");
-        }
+        boolean suicide = victim.equals(killer);
+
         victim.hideDamageArrow();
         killer.hideDamageArrow();
 
@@ -271,6 +258,9 @@ public class Deathmatch extends GameBase {
         victim.getMeta().set(MetaKey.KILLED_LOCATION, victim.getPlayer().getLocation().clone());
         victim.getMeta().set(MetaKey.KILLED_LOCATION_FOR_KILL_CAMERA, victim.getPlayer().getLocation().clone());
         victim.getMeta().set(MetaKey.KILLER, weapon.getHolder());
+
+        int killCount = killer.getMeta().getInt(MetaKey.MULTI_KILL_COUNT) + 1;
+        killer.getMeta().set(MetaKey.MULTI_KILL_COUNT, killCount);
 
         victim.clearInventory();
         victim.getPlayer().setHealth(20D);
@@ -282,19 +272,46 @@ public class Deathmatch extends GameBase {
         killer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1, false);
 
         //スコア
-        int score;
+        double score;
         if (suicide) {
-            score = -100;
+            score = -200;
         }else {
             killer.addKill(1);
             killer.getSTeam().addKill(1);
             score = 100;
+            score += killCount * 10D;
         }
         victim.addDeath(1);
         victim.getSTeam().addDeath(1);
 
-        killer.addScore(score);
-        killer.getSTeam().addScore(score);
+        killer.addScore((int)score);
+        killer.getSTeam().addScore((int)score);
+
+        if (suicide) {
+            // 自殺
+            victim.sendTitle(
+                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "killed " + ChatColor.GRAY + "yourself...!",
+                    ChatColor.YELLOW + "Suicide penalty " + ChatColor.RED.toString() + (int)score,
+                    20 * 3,
+                    0, 20
+            );
+            this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + ChatColor.WHITE + "oneself" + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ") " + ChatColor.RED + "" + (int)score);
+        }else {
+            // 他殺
+            victim.sendTitle(
+                    victim.getStringWithColor("You") + " " + ChatColor.WHITE + "killed by " + killer.getNameWithColor(),
+                    ChatColor.RED + weapon.getName(),
+                    20 * 3,
+                    0, 20
+            );
+            killer.sendTitle(
+                    "",
+                    killer.getStringWithColor("You") + " " + ChatColor.WHITE + "killed " + victim.getNameWithColor() + ChatColor.YELLOW + " +" + (int)score,
+                    20,
+                    0, 5
+            );
+            this.message(killer.getNameWithColor() + ChatColor.GRAY + " killed " + victim.getNameWithColor() + ChatColor.GRAY + ChatColor.ITALIC + " (" + weapon.getName() + ") " + ChatColor.YELLOW + "" + (int)score);
+        }
 
         this.updateScore();
     }
@@ -338,6 +355,8 @@ class MetaKey {
     static String KILLED_LOCATION = "killed_location";
     static String KILLED_LOCATION_FOR_KILL_CAMERA = "killed_location_for_kill_camera";
     static String KILLER = "killer";
+    static String MULTI_KILL_COUNT = "multi_kill_count";
+    static String MULTI_KILL_TICK = "multi_kill_tick";
 }
 class PlayerStatus {
     static String NONE = "none";

@@ -8,6 +8,7 @@ import sItem.SItemManager;
 import sPlayers.SPlayer;
 import sPlayers.SPlayerDataManager;
 import sPlayers.SPlayerManager;
+import sScoreboards.SScoreboard;
 import stages.StageManager;
 import stages.stageEditor.StageEditorManager;
 import sTeams.TeamSelector;
@@ -20,6 +21,7 @@ import utils.MetadataManager;
 public class Main extends JavaPlugin {
     @Override
     public void onEnable(){
+        SScoreboard.init();
         DamageArrow.init(this);
         DelayedTask.init(this);
         StageManager.init(this);
