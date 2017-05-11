@@ -20,14 +20,19 @@ import sTeams.STeam;
 abstract public class GameBase implements Listener{
     private String type;
     private String status = "";
+    private Stage stage;
     public GameBase(String type) {
         this.type = type;
     }
-    abstract public boolean start(Stage stage);
+    abstract protected boolean start(Stage stage);
     abstract public boolean stop();
     abstract public void onTick();
     abstract public void onSPlayerDeath(SPlayer sPlayer, SItem weapon);
     abstract public void selectTeam(SPlayer sp, STeam sTeam);
+    final boolean _start(Stage stage) {
+        this.stage = stage;
+        return start(stage);
+    }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
@@ -63,5 +68,8 @@ abstract public class GameBase implements Listener{
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+    public Stage getStage() {
+        return this.stage;
     }
 }

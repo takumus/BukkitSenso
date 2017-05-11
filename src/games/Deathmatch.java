@@ -161,7 +161,7 @@ public class Deathmatch extends GameBase {
     // ゲーム開始（チーム選択開始）
     //----------------------------------------------------------------------//
     @Override
-    public boolean start(Stage stage) {
+    protected boolean start(Stage stage) {
         this.teamSpawns = new HashMap<>();
         stage.getSpawns().forEach((spawn) -> {
             String name = spawn.getMeta("team");
@@ -217,11 +217,12 @@ public class Deathmatch extends GameBase {
     @Override
     public void onTick() {
         if (!this.getStatus().equals("playing")) return;
+        this.getStage().getWorld().setTime(6000);
+        this.getStage().getWorld().setStorm(false);
+        this.getStage().getWorld().setThundering(false);
+
         GameManager.getInGamePlayers().forEach((sp) -> {
             sp.getPlayer().setSneaking(true);
-            sp.getPlayer().getWorld().setTime(0);
-            sp.getPlayer().getWorld().setStorm(false);
-            sp.getPlayer().getWorld().setThundering(false);
             sp.getPlayer().setFoodLevel(30);
             SMeta meta = sp.getMeta();
             if (meta.getString(MetaKey.STATUS).equals(PlayerStatus.KILL_CAMERA)) {

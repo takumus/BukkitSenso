@@ -46,7 +46,7 @@ public class GameManager {
             return false;
         }
 
-        if (!game.start(stage)) {
+        if (!game._start(stage)) {
             return false;
         }
         currentGame = game;

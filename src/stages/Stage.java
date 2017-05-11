@@ -1,5 +1,7 @@
 package stages;
 
+import org.bukkit.World;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,5 +31,8 @@ public class Stage {
     }
     public void clearSpawns() {
         this.spawns.clear();
+    }
+    public World getWorld() {
+        return this.spawns.get(0).getLocation().getWorld();
     }
 }
