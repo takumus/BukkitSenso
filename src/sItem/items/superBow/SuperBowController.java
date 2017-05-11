@@ -1,5 +1,6 @@
 package sItem.items.superBow;
 
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Arrow;
@@ -54,6 +55,14 @@ public class SuperBowController extends SItemController{
         sp.playSound(Sound.ENTITY_BLAZE_HURT, 1f, 0.1f, true);
         this.arrows.add(newArrow);
     }
+    private double distanceLine(Location p1, Location p2, Location p3)
+    {
+        Vector p3p2 = p3.subtract(p2).toVector();
+        Vector p1p2 = p1.subtract(p2).toVector();
+        double d = p3p2.getCrossProduct(p1p2).length();
+        double l = p2.distance(p3);
+        return d / l;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onShoot(EntityShootBowEvent e) {
@@ -96,7 +105,13 @@ public class SuperBowController extends SItemController{
         SPlayer victim = SPlayerManager.getSPlayer(e.getEntity());
         if (victim == null) return;
 
-        victim.damage(damager.getSItems().get(SuperBow.class), SuperBow.DAMAGE);
+        double headDistance = distanceLine(victim.getPlayer().getLocation().add(0, 1.79, 0),damagerEntity.getLocation(),damagerEntity.getLocation().add(damagerEntity.getVelocity()));
+
+        if(headDistance < 0.043) {
+            victim.damage(damager.getSItems().get(SuperBow.class), SuperBow.DAMAGE * 1.8);
+        }else {
+            victim.damage(damager.getSItems().get(SuperBow.class), SuperBow.DAMAGE);
+        }
 
         DelayedTask.task(() -> {
             damager.playSound(Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1f, false);
